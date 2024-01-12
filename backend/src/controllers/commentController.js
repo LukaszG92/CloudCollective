@@ -14,10 +14,19 @@ exports.createComment = (req, res) => {
         res.redirect('/home')
     }).catch(err => {
         console.log(err)
-        res.redirect('/home')
+        res.redirect('/error')
     })
 }
 
 exports.getPostComments = (req, res) => {
-    Comment.findAll({where: {'postId' : req.params.post}}).then(results => console.log(results));
+    Comment.findAll({where: {
+        'postId' : req.params.post
+        }
+    }).then(result => {
+        console.log(result)
+        res.redirect('/home')
+    }).catch(err => {
+        console.log(err)
+        res.redirect('/error')
+    })
 }
