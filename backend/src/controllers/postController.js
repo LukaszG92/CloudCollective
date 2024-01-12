@@ -1,5 +1,6 @@
 const Post = require('../Models/postModel')
 const Follow = require('../Models/followModel')
+const sequelize = require('../utils/database');
 
 exports.createPost = (req, res) => {
     Post.create({
@@ -97,4 +98,33 @@ exports.getUserPost = (req, res) => {
         console.log(err)
         res.redirect('/error')
     })
+}
+
+exports.likePost = (req, res) => {
+    let userUsername = req.user;
+    let postId = req.params.post;
+    sequelize.query(`SELECT COUNT(*) as likesCount
+        FROM likes
+        WHERE userLike = ${userUsername} AND postId = ${postId}`)
+        .then(result => {
+            let count = result[0][0]['likesCount']
+            if(count === 0)
+                sequelize.query(`INSERT INTO likes(userLike, postId) VALUES (${userUsername}, ${postId});`)
+                    .then(result => {
+                        console.log(result)
+                        res.redirect('/home')
+                    }).catch(err => {
+                    console.log(err)
+                    res.redirect('/error')
+                })
+            else
+                sequelize.query(`DELETE FROM likes WHERE userLike = ${userUsername} AND postId = ${postId};`)
+                    .then(result => {
+                        console.log(result)
+                        res.redirect('/home')
+                    }).catch(err => {
+                    console.log(err)
+                    res.redirect('/error')
+                })
+        })
 }
