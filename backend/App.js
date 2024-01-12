@@ -14,7 +14,15 @@ const app = express();
 Comment.belongsTo(User, {as: 'author'})
 Comment.belongsTo(Post)
 Post.belongsTo(User, {as: 'creator'})
-User.belongsToMany(Post, { through: sequelize.define('Likes', {}, {timestamps:false}), foreignKey: 'userLike'});
+User.belongsToMany(Post, {
+    through: sequelize.define(
+        'Likes',
+        {},
+        {
+            timestamps:false
+        }),
+    foreignKey: 'userLike'
+});
 
 sequelize.sync()
 
@@ -24,4 +32,4 @@ app.use('/api/users', userRouter);
 
 
 
-app.listen(5001);
+app.listen(8000);
