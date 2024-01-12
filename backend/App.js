@@ -18,10 +18,10 @@ User.belongsToMany(Post, { through: sequelize.define('Likes', {}, {timestamps:fa
 
 sequelize.sync()
 
-app.use('/api/comments/', commentRouter);
-app.use('/api/posts/', postRouter);
-app.use('/api/user/', userRouter);
+app.use('/api/comments', commentRouter);
+app.use('/api/posts', postRouter);
+app.use('/api/users', userRouter);
 
 
 
-app.listen(8000);
+app.listen(5001);

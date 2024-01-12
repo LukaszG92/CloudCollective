@@ -1,33 +1,30 @@
 const Post = require('../Models/postModel')
 const Follow = require('../Models/followModel')
 const sequelize = require('../utils/database');
+const {Op} = require("sequelize");
 
 exports.createPost = (req, res) => {
     Post.create({
-        'description' : "Post from API",
-        'creatorUsername' : "LukasG"
+        'description' : req.body.text,
+        'creatorUsername' : req.user
     }).then(result => {
         console.log(result)
-        res.redirect('/home')
     }).catch(err => {
         console.log(err)
-        res.redirect('/error')
     })
 }
 
 exports.updatePost = (req, res) => {
     let postId = req.params.post;
     Post.findOne({where : {
-        'postId' : postId
+        'id' : postId
         }
     }).then(post => {
-        post.update({'description': 'updated Post'})
+        post.update({'description': req.body.text})
             .then(result => {
                 console.log(result)
-                res.redirect('/home')
             }).catch(err => {
             console.log(err)
-            res.redirect('/error')
         })
     })
 }
@@ -35,32 +32,28 @@ exports.updatePost = (req, res) => {
 exports.deletePost = (req, res) => {
     let postId = req.params.post;
     Post.destroy({where: {
-        'postId' : postId
+        'id' : postId
         }
     }).then(result => {
         console.log(result)
-        res.redirect('/home')
     }).catch(err => {
         console.log(err)
-        res.redirect('/error')
     })
 }
 
 exports.findPost = (req, res) => {
     let postId = req.params.post;
     Post.findOne({where : {
-            'postId' : postId
+            'id' : postId
         }
     }).then(result => {
         console.log(result)
-        res.redirect('/home')
     }).catch(err => {
         console.log(err)
-        res.redirect('/error')
     })
 }
 
-exports.getFeed = (req, res) => {
+exports.feed = (req, res) => {
     let userUsername = req.user;
     Follow.findAll({where: {
         'following' : userUsername
@@ -68,19 +61,20 @@ exports.getFeed = (req, res) => {
     }).then(results => {
         let followings = [];
         results.forEach(following => {
-            followings.push({'creatorUsername': following})
+            followings.push({'creatorUsername': following['dataValues']['follower']})
         })
+        console.log(followings)
         Post.findAll({
             where:{
-                $or: followings
+                [Op.or]: followings
             },
-            order: ['id', 'DESC']
+            order: [
+                ['id', 'DESC']
+            ]
         }).then(result => {
             console.log(result)
-            res.redirect('/home')
         }).catch(err => {
             console.log(err)
-            res.redirect('/error')
         })
     })
 }
@@ -93,38 +87,30 @@ exports.getUserPost = (req, res) => {
         }
     }).then(result => {
         console.log(result)
-        res.redirect('/home')
     }).catch(err => {
         console.log(err)
-        res.redirect('/error')
     })
 }
 
 exports.likePost = (req, res) => {
     let userUsername = req.user;
     let postId = req.params.post;
-    sequelize.query(`SELECT COUNT(*) as likesCount
-        FROM likes
-        WHERE userLike = ${userUsername} AND postId = ${postId}`)
+    sequelize.query(`SELECT COUNT(*) as likesCount FROM likes WHERE userLike = '${userUsername}' AND postId = ${postId}`)
         .then(result => {
             let count = result[0][0]['likesCount']
             if(count === 0)
-                sequelize.query(`INSERT INTO likes(userLike, postId) VALUES (${userUsername}, ${postId});`)
+                sequelize.query(`INSERT INTO likes(userLike, postId) VALUES ('${userUsername}', ${postId});`)
                     .then(result => {
                         console.log(result)
-                        res.redirect('/home')
                     }).catch(err => {
                     console.log(err)
-                    res.redirect('/error')
                 })
             else
-                sequelize.query(`DELETE FROM likes WHERE userLike = ${userUsername} AND postId = ${postId};`)
+                sequelize.query(`DELETE FROM likes WHERE userLike = '${userUsername}' AND postId = ${postId};`)
                     .then(result => {
                         console.log(result)
-                        res.redirect('/home')
                     }).catch(err => {
                     console.log(err)
-                    res.redirect('/error')
                 })
         })
 }
