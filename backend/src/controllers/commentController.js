@@ -3,7 +3,7 @@ const Comment = require('../Models/commentModel');
 
 exports.createComment = (req, res) => {
     let postId = req.params.post;
-    let authorUsername = req.user;
+    let authorUsername = req.session.user;
     Comment.create({
         'body' : req.body.text,
         'authorUsername' : authorUsername,

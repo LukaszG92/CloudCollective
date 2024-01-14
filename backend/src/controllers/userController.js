@@ -11,20 +11,18 @@ exports.signup = (req, res) => {
             'password': req.body.password,
             'email': req.body.email,
         }).then(result => {
+            res.session.user = req.body.cognome;
             res.status(200).send({
                 status: "success",
                 message: "user saved successfully",
-                data: {
-                    user: req.body.username,
-                },
             });
         })
     } catch (e) {
-    res.status(500).send({
-        status: "failure",
-        message: e.message,
-    });
-}
+        res.status(500).send({
+            status: "failure",
+            message: e.message,
+        });
+    }
 }
 
 
@@ -49,6 +47,7 @@ exports.signin = (req, res) => {
                     message: "password is incorrect",
                 });
             }
+            res.session.user = username;
             res.status(200).send({
                 status: "success",
                 message: "logged in successfully",
@@ -63,7 +62,7 @@ exports.signin = (req, res) => {
 }
 
 exports.updateUser = (req, res) => {
-    let username = req.user;
+    let username = req.session.user;
     User.findOne({where : {
             'username' : username
         }
@@ -127,20 +126,35 @@ exports.getFollowers = (req, res) => {
 
 exports.getFollowing = (req, res) => {
     let username = req.params.user;
-    Follow.findAll({where: {
-            'follower' : username
-        }
-    }).then(results => {
-        let followings = [];
-        results.forEach(following => {
-            followings.push(following['dataValues']['following'])
+    try {
+        Follow.findAll({
+            where: {
+                'follower': username
+            }
+        }).then(results => {
+            let followings = [];
+            results.forEach(following => {
+                followings.push(following['dataValues']['following'])
+            })
+            console.log(followings)
+            res.status(200).send({
+                status: "success",
+                message: "followings retrieved successfully",
+                data: {
+                    followings: followings
+                },
+            });
         })
-        console.log(followings);
-    })
+    } catch (e) {
+        res.status(500).send({
+            status: "failure",
+            message: e.message,
+        });
+    }
 }
 
 exports.follow = (req, res) => {
-    let follower = req.user;
+    let follower = req.session.user;
     let following = req.params.user;
     Follow.count({
         where: {

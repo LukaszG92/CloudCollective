@@ -6,7 +6,7 @@ const {Op} = require("sequelize");
 exports.createPost = (req, res) => {
     Post.create({
         'description' : req.body.text,
-        'creatorUsername' : req.user
+        'creatorUsername' : req.session.user
     }).then(result => {
         console.log(result)
     }).catch(err => {
@@ -54,7 +54,7 @@ exports.findPost = (req, res) => {
 }
 
 exports.feed = (req, res) => {
-    let userUsername = req.user;
+    let userUsername = req.session.user;
     Follow.findAll({where: {
         'following' : userUsername
         }
@@ -93,7 +93,7 @@ exports.getUserPost = (req, res) => {
 }
 
 exports.likePost = (req, res) => {
-    let userUsername = req.user;
+    let userUsername = req.session.user;
     let postId = req.params.post;
     sequelize.query(`SELECT COUNT(*) as likesCount FROM likes WHERE userLike = '${userUsername}' AND postId = ${postId}`)
         .then(result => {

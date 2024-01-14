@@ -18,7 +18,7 @@ const Post = sequelize.define('post', {
         defaultValue: "https://cloudcollective.blob.core.windows.net/images/defaultpost.jpg"
     }
 }, {
-    timestamps: false
+    updatedAt: false
 });
 
 
