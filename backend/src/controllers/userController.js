@@ -3,37 +3,63 @@ const Follow = require("../Models/followModel");
 const {Op} = require("sequelize");
 
 exports.signup = (req, res) => {
-    User.create({
-        'nome' : req.body.nome,
-        'cognome' : req.body.cognome,
-        'username' : req.body.username,
-        'password' : req.body.password,
-        'email' : req.body.email,
-    }).then(result => {
-        console.log(result)
-    }).catch(err => {
-        console.log(err)
-    })
+    try {
+        User.create({
+            'nome': req.body.nome,
+            'cognome': req.body.cognome,
+            'username': req.body.username,
+            'password': req.body.password,
+            'email': req.body.email,
+        }).then(result => {
+            res.status(200).send({
+                status: "success",
+                message: "user saved successfully",
+                data: {
+                    user: req.body.username,
+                },
+            });
+        })
+    } catch (e) {
+    res.status(500).send({
+        status: "failure",
+        message: e.message,
+    });
+}
 }
 
 
 exports.signin = (req, res) => {
-    let password = req.body.password
-    let username = req.body.username
-    User.findOne({
-        where: {
-            'username' : username
-        }
-    }).then(results => {
-        console.log(results)
-        let savedPassword = results['dataValues']['password'];
-        if(savedPassword === password)
-            console.log('good-login')
-        else
-            console.log('not-login')
-    }).catch(err => {
-        console.log(err)
-    })
+    try {
+        let password = req.body.password;
+        let username = req.body.username;
+        User.findOne({
+            where: {
+                'username': username
+            }
+        }).then(result => {
+            if (!result) {
+                return res.status(401).send({
+                    status: "failure",
+                    message: "user does not exist",
+                });
+            }
+            if (password !== result['dataValues']['password']) {
+                return res.status(401).send({
+                    status: "failure",
+                    message: "password is incorrect",
+                });
+            }
+            res.status(200).send({
+                status: "success",
+                message: "logged in successfully",
+            });
+        })
+    } catch (e) {
+        res.status(500).send({
+            status: "failure",
+            message: e.message,
+        });
+    }
 }
 
 exports.updateUser = (req, res) => {

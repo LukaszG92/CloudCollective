@@ -1,4 +1,6 @@
 const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
 
 const commentRouter = require('./src/routes/commentRoute');
 const postRouter = require('./src/routes/postRoute');
@@ -24,12 +26,12 @@ User.belongsToMany(Post, {
     foreignKey: 'userLike'
 });
 
-sequelize.sync()
+sequelize.sync();
 
+app.use(cors());
+app.use(bodyParser.json());
 app.use('/api/comments', commentRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/users', userRouter);
-
-
 
 app.listen(8000);
