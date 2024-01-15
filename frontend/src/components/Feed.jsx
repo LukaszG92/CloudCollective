@@ -47,7 +47,8 @@ function Feed(props) {
 }
 
 const FeedContainer = styled.div`
-  width: 500px;
+  width: 40%; 
+  padding: 0 70px;
   .FeedWrapper {
     height: calc(100vh - 63px);
     overflow-y: auto;

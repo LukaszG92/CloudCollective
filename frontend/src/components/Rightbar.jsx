@@ -33,7 +33,7 @@ function Rightbar() {
 }
 
 const RightbarContainer = styled.div`
-  width: 300px;
+  width: 30%;
   height: calc(100vh - 63px);
   overflow: scroll;
   position: sticky;
