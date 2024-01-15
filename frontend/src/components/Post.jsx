@@ -19,7 +19,7 @@ export default function Post( content ) {
                 <div className="postTopLeft">
                     <Link to={"/profile/" + content.username}>
                         <img
-                            src={'http://localhost:3000/images/alessiapic_profile.png'}
+                            src={'http://localhost:3000/images/defaultavatar.png'}
                             alt=""
                             className="postProfileImg"
                         />

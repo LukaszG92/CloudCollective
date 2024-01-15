@@ -11,8 +11,7 @@ function Feed(props) {
         const fetchPost = async () => {
             const response = await fetch('http://localhost:8000/api/posts/feed');
             const responseData = await response.json();
-            console.log(responseData.data.followings);
-            setPosts(responseData.data.followings)
+            setPosts(responseData.data.posts)
         };
         fetchPost();
     }, []);
@@ -33,11 +32,12 @@ function Feed(props) {
                 <div onScroll={onScroll} className="FeedWrapper">
                     {Posts.map((post) => (
                         <Post
-                            username={post.username}
-                            imageSrc={post.imageSrc}
-                            caption={post.caption}
-                            comments={post.comments}
-                            dateCreated={post.dateCreated}
+                            key={post.id}
+                            username={post.creatorUsername}
+                            imageSrc={post.image}
+                            caption={post.description}
+                            comments={[]}
+                            dateCreated={post.createdAt}
                         ></Post>
                     ))}
                 </div>

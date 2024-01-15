@@ -54,7 +54,7 @@ exports.findPost = (req, res) => {
 }
 
 exports.feed = (req, res) => {
-    let userUsername = req.session.user;
+    let userUsername = 'LGG';
     Follow.findAll({where: {
         'following' : userUsername
         }
@@ -63,7 +63,6 @@ exports.feed = (req, res) => {
         results.forEach(following => {
             followings.push({'creatorUsername': following['dataValues']['follower']})
         })
-        console.log(followings)
         Post.findAll({
             where:{
                 [Op.or]: followings
@@ -72,7 +71,17 @@ exports.feed = (req, res) => {
                 ['id', 'DESC']
             ]
         }).then(result => {
-            console.log(result)
+            let posts = [];
+            result.forEach(post => {
+                posts.push(post['dataValues'])
+            })
+            res.status(200).send({
+                status: "success",
+                message: "feed retrieved successfully",
+                data: {
+                    posts: posts
+                },
+            });
         }).catch(err => {
             console.log(err)
         })

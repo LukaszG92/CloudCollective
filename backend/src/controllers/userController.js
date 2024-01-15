@@ -11,7 +11,6 @@ exports.signup = (req, res) => {
             'password': req.body.password,
             'email': req.body.email,
         }).then(result => {
-            res.session.user = req.body.cognome;
             res.status(200).send({
                 status: "success",
                 message: "user saved successfully",
@@ -47,7 +46,6 @@ exports.signin = (req, res) => {
                     message: "password is incorrect",
                 });
             }
-            res.session.user = username;
             res.status(200).send({
                 status: "success",
                 message: "logged in successfully",
@@ -104,9 +102,15 @@ exports.getUser = (req, res) => {
              'username': username
         }
     }).then(result => {
-        console.log(result)
-    }).catch(err => {
-        console.log(err)
+        let user = result['dataValues']
+        console.log(user)
+        res.status(200).send({
+            status: "success",
+            message: "followings retrieved successfully",
+            data: {
+                user: user
+            },
+        });
     })
 }
 
@@ -136,7 +140,6 @@ exports.getFollowing = (req, res) => {
             results.forEach(following => {
                 followings.push(following['dataValues']['following'])
             })
-            console.log(followings)
             res.status(200).send({
                 status: "success",
                 message: "followings retrieved successfully",

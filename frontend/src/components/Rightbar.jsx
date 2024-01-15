@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import {useEffect, useState} from "react";
+import RightbarUser from './RighbarUser'
 import {Link} from "react-router-dom";
 
 function Rightbar() {
@@ -7,9 +8,8 @@ function Rightbar() {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const response = await fetch('http://localhost:8000/api/posts/LG/followings');
+            const response = await fetch('http://localhost:8000/api/users/LG/followings');
             const responseData = await response.json();
-            console.log(responseData.data.followings);
             setFollowings(responseData.data.followings)
         };
         fetchUsers();
@@ -21,26 +21,10 @@ function Rightbar() {
             <span className="rightbarFollowingTitle">Followings</span>
             <div className="rightbarFollowings">
                 {Followings.map((f) => (
-                    <div key={f} className="rightbarFollowing">
-                        <div className="rightbarfollowingLeft">
-                            <Link
-                                style={{ textDecoration: "none", color: "#000000" }}
-                                to={"/profile/" + f}
-                            >
-                                <img
-                                    src={'http://localhost:3000/images/defaultavatar.png'}
-                                    alt=""
-                                    className="rightbarFollowingImg"
-                                />
-                            </Link>
-                            <span className="rightbarFollowingName">{f}</span>
-                        </div>
-                        <div className="rightbarfollowingRight">
-                            <span className="rightbarFollowingAction">
-                                UnFollow
-                            </span>
-                        </div>
-                    </div>
+                    <RightbarUser
+                        key = {f}
+                        username = {f}
+                    />
                 ))}
             </div>
         </div>
