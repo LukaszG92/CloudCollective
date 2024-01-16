@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import {useEffect, useState} from "react";
-import RightbarUser from './RighbarUser'
-import {Link} from "react-router-dom";
+import RightbarUser from './RightbarUser'
 
 function Rightbar() {
     const [Followings, setFollowings] = useState([]);
@@ -22,7 +21,6 @@ function Rightbar() {
             <div className="rightbarFollowings">
                 {Followings.map((f) => (
                     <RightbarUser
-                        key = {f}
                         username = {f}
                     />
                 ))}

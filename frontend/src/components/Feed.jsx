@@ -47,22 +47,22 @@ function Feed(props) {
 }
 
 const FeedContainer = styled.div`
-  width: 40%; 
-  padding: 0 70px;
-  .FeedWrapper {
-    height: calc(100vh - 63px);
-    overflow-y: auto;
-    padding: 5px;
-    ::-webkit-scrollbar {
-      width: 0px;
+    width: 40%; 
+    padding: 0 70px;
+    .FeedWrapper {
+        height: calc(100vh - 63px);
+        overflow-y: auto;
+        padding: 5px;
+        ::-webkit-scrollbar {
+            width: 0px;
+        }
+        ::-webkit-scrollbar-track {
+            background-color: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: rgb(192, 192, 192);
+        }
     }
-    ::-webkit-scrollbar-track {
-      background-color: #f1f1f1;
-    }
-    ::-webkit-scrollbar-thumb {
-      background-color: rgb(192, 192, 192);
-    }
-  }
 `;
 
 export default Feed

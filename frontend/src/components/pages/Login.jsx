@@ -8,7 +8,6 @@ function Login() {
     const [show1, setshow1] = useState(1);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [sessionUser, setSessionUser] = useState('');
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -23,9 +22,9 @@ function Login() {
         };
     }, [show1]);
 
-    const HandlerLoginForm = async (e) => {
+    const HandlerLoginForm = (e) => {
         e.preventDefault();
-        let response = fetch('http://localhost:8000/api/users/login', {
+        fetch('http://localhost:8000/api/users/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -35,9 +34,6 @@ function Login() {
                 password
             })
         })
-        let responseData = await response.json();
-        console.log(responseData.session.user);
-        setSessionUser(responseData.session.user);
     };
 
     return (
@@ -79,7 +75,7 @@ function Login() {
                                         onChange={(e) => {
                                             setUsername(e.target.value);
                                         }}
-                                        placeholder={sessionUser}
+                                        placeholder="Username"
                                         type = "text"
                                         required
                                         className="loginInput"
@@ -120,118 +116,117 @@ function Login() {
 }
 
 const LoginContainer = styled.div`
-  width: 100vw;
-  display: flex;
-  margin-top: 100px;
-  justify-content: center;
-  .hide {
-    opacity: 0;
-    -webkit-transition: opacity 1.5s ease-out;
-    transition: opacity 1.5s ease-out;
-    visibility: visible;
-  }
-  .show {
-    opacity: 1;
-    -webkit-transition: opacity 1.5s ease-in;
-    transition: opacity 1.5s ease-in;
-    z-index: 2;
-  }
-  .loginWrapper {
-    width: 100%;
-    height: 70%;
+    width: 100vw;
     display: flex;
-  }
-  .loginLeft {
-    flex: 1;
-    display: flex;
-    position: relative;
-    width: 100%;
-    height: 600px;
-    background-image: url("http://localhost:3000/images/loginpage.png");
-    min-width: 460px;
-    background-repeat: no-repeat;
-    background-position: right 2px;
-    @media (max-width: 877px) {
-      flex: 1;
-      display: none;
-    }
-  }
-  .frontImgWrapper {
-    display: flex;
-  }
-  .frontImg {
-    position: absolute;
-    top: 28px;
-    right: 59px;
-  }
-  .loginRight {
-    flex: 1;
-    display: flex;
-    height: max-content;
-    @media (max-width: 877px) {
-      justify-content: center;
-    }
-  }
-  .loginRightWrapper {
-    width: 360px;
-    border: 1px solid rgb(224, 224, 224);
-    border-radius: 3px;
-    padding-bottom: 10px;
-  }
-
-  .loginRightTop {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .loginRightTopTop {
-    display: flex;
-    width: 100%;
+    margin-top: 100px;
     justify-content: center;
-    margin: 35px 0;
-  }
-  .loginRightTopLogo {
-    font-family: "Dancing Script", cursive;
-    font-size: 60px;
-    font-weight: bold;
-  }
-  .loginRightTopForm {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-  }
-  .loginBox {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    width: 70%;
-    padding-bottom: 20px;
-  }
-  .loginInput {
-    height: 30px;
-    width: 100%;
-    border-radius: 5px;
-    border: 1px solid gray;
-    font-size: 14px;
-    margin-bottom: 10px;
-    padding: 0px 5px;
-  }
-  .loginButton {
-    margin-top: 10px;
-    width: 100%;
-    height: 25px;
-    background-color: #0095f6;
-    color: white;
-    border-radius: 5px;
-    border: none;
-    font-size: 15px;
-    cursor: pointer;
-  }
-  .SignUptext {
-    color: #0095f6;
-    font-weight: 500;
-    cursor: pointer;
-  }
+    .hide {
+        opacity: 0;
+        -webkit-transition: opacity 1.5s ease-out;
+        transition: opacity 1.5s ease-out;
+        visibility: visible;
+    }
+    .show {
+        opacity: 1;
+        -webkit-transition: opacity 1.5s ease-in;
+        transition: opacity 1.5s ease-in;
+        z-index: 2;
+    }
+    .loginWrapper {
+        width: 100%;
+        height: 70%;
+        display: flex;
+    }
+    .loginLeft {
+        flex: 1;
+        display: flex;
+        position: relative;
+        width: 100%;
+        height: 600px;
+        background-image: url("http://localhost:3000/images/loginpage.png");
+        min-width: 460px;
+        background-repeat: no-repeat;
+        background-position: right 2px;
+        @media (max-width: 877px) {
+            flex: 1;
+            display: none;
+        }
+    }
+    .frontImgWrapper {
+        display: flex;
+    }
+    .frontImg {
+        position: absolute;
+        top: 28px;
+        right: 59px;
+    }
+    .loginRight {
+        flex: 1;
+        display: flex;
+        height: max-content;
+        @media (max-width: 877px) {
+            justify-content: center;
+        }
+    }
+    .loginRightWrapper {
+        width: 360px;
+        border: 1px solid rgb(224, 224, 224);
+        border-radius: 3px;
+        padding-bottom: 10px;
+    }
+    .loginRightTop {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .loginRightTopTop {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        margin: 35px 0;
+    }
+    .loginRightTopLogo {
+        font-family: "Dancing Script", cursive;
+        font-size: 60px;
+        font-weight: bold;
+    }
+    .loginRightTopForm {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+    .loginBox {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        width: 70%;
+        padding-bottom: 20px;
+    }
+    .loginInput {
+        height: 30px;
+        width: 100%;
+        border-radius: 5px;
+        border: 1px solid gray;
+        font-size: 14px;
+        margin-bottom: 10px;
+        padding: 0 5px;
+    }
+    .loginButton {
+        margin-top: 10px;
+        width: 100%;
+        height: 25px;
+        background-color: #0095f6;
+        color: white;
+        border-radius: 5px;
+        border: none;
+        font-size: 15px;
+        cursor: pointer;
+    }
+    .SignUptext {
+        color: #0095f6;
+        font-weight: 500;
+        cursor: pointer;
+    }
 `;
 
 

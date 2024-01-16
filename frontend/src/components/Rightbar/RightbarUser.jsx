@@ -1,5 +1,7 @@
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
+import PropTypes from "prop-types";
+import Post from "../Post";
 
 function RightbarUser(props) {
     const [user, setUser] = useState([]);
@@ -11,7 +13,7 @@ function RightbarUser(props) {
             setUser(responseData.data.user)
         };
         fetchUserData();
-    }, []);
+    }, [props.username]);
 
     return (
         <div className="rightbarFollowing">
@@ -38,3 +40,7 @@ function RightbarUser(props) {
 }
 
 export default RightbarUser;
+
+Post.propTypes = {
+    username: PropTypes.string.isRequired
+}

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FiMoreVertical } from "react-icons/fi";
 import { Link } from 'react-router-dom';
@@ -7,9 +6,6 @@ import {formatDistance} from "date-fns";
 import {AiFillHeart} from "react-icons/ai";
 
 export default function Post( content ) {
-    const [commentsSlice, setCommentsSlice] = useState(3);
-    const [showPost, setShowPost] = useState(false);
-    const [showMenu, setShowMenu] = useState(false);
 
     // components
     // -> header, image, actions (like & comment icons), footer, comments
@@ -33,16 +29,10 @@ export default function Post( content ) {
                 </div>
                 <div className="postTopright">
                     <span className="postDate"> {formatDistance(content.dateCreated, new Date())} ago</span>
-                    <FiMoreVertical
-                        onClick={() => {
-                            setShowMenu(!showMenu);
-                        }}
-                    />
-                    {showMenu && (
-                        <div className="topRightPanel">
-                            Delete
-                        </div>
-                    )}
+                    <FiMoreVertical/>
+                    <div className="topRightPanel">
+                        Delete
+                    </div>
                 </div>
             </div>
             <hr className="hrh" />
@@ -54,7 +44,6 @@ export default function Post( content ) {
                         className="postImg"
                     />
                 </div>
-
                 <p className="postText">{content.caption}</p>
             </div>
             <hr className="hrh" />
@@ -66,9 +55,6 @@ export default function Post( content ) {
                     />
                     <span
                         className="postLikeCounter"
-                        onClick={() => {
-                            setShowPost(true);
-                        }}
                     >
               0 Likes 0 Comments
             </span>
@@ -79,23 +65,23 @@ export default function Post( content ) {
 }
 
 const PostContainer = styled.div`
-        width: 99%;
-        border-radius: 10px;
-        border: 1px solid rgb(211, 211, 211);
-        -webkit-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
-        box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
-        margin-top: 10px;
-        margin-bottom: 50px;
-        .postTop {
+    width: 99%;
+    border-radius: 10px;
+    border: 1px solid rgb(211, 211, 211);
+    -webkit-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+    box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+    margin-top: 10px;
+    margin-bottom: 50px;
+    .postTop {
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: 5px;
     }
-        .postTopright {
+    .postTopright {
         position: relative;
     }
-        .topRightPanel {
+    .topRightPanel {
         position: absolute;
         background-color: #eaeaea;
         width: 80px;
@@ -109,71 +95,71 @@ const PostContainer = styled.div`
         padding-top: 10px;
         text-align: center;
         &:hover {
-        cursor: pointer;
+            cursor: pointer;
+        }
     }
-    }
-        .postTopLeft {
+    .postTopLeft {
         display: flex;
         align-items: center;
     }
-        .postProfileImg {
+    .postProfileImg {
         width: 32px;
         height: 32px;
         border-radius: 50%;
         object-fit: cover;
     }
-        .postUsername {
+    .postUsername {
         font-size: 15px;
         font-weight: 500;
         padding: 0 10px;
     }
-        .postDate {
+    .postDate {
         font-size: 10px;
         font-weight: 500;
     }
-        .postImgWrapper {
+    .postImgWrapper {
         padding-right: 3px;
         padding-left: 3px;
     }
-        .postImg {
+    .postImg {
         padding-top: 5px;
         width: 100%;
         object-fit: contain;
     }
-        .postCenter {
+    .postCenter {
         display: flex;
         flex-direction: column;
     }
-        .postText {
+    .postText {
         padding-top: 5px;
         padding-bottom: 3px;
         font-weight: 400;
         font-size: 15px;
         padding-left: 4px;
     }
-        .postBottom {
+    .postBottom {
         padding-top: 5px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding-left: 4px;
     }
-        .postBottomLeft {
+    .postBottomLeft {
         display: flex;
         align-items: center;
         &:hover {
-        cursor: pointer;
+            cursor: pointer;
+        }
     }
-    }
-        .likeIcon {
+    .likeIcon {
         font-size: 30px;
         padding-right: 5px;
         cursor: pointer;
     }
-        .postLikeCounter {
+    .postLikeCounter {
         font-size: 15px;
     }
-        .hrh {
+    .hrh {
         opacity: 0.4;
     }
 `;
