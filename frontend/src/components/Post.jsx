@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 import styled from "styled-components";
 import {formatDistance} from "date-fns";
 import {AiFillHeart} from "react-icons/ai";
+import {useState} from "react";
 
 export default function Post( content ) {
+    const [showMenu, setShowMenu] = useState(false);
 
-    // components
-    // -> header, image, actions (like & comment icons), footer, comments
     return (
         <PostContainer>
             <div className="postTop">
@@ -29,10 +29,16 @@ export default function Post( content ) {
                 </div>
                 <div className="postTopright">
                     <span className="postDate"> {formatDistance(content.dateCreated, new Date())} ago</span>
-                    <FiMoreVertical/>
-                    <div className="topRightPanel">
-                        Delete
-                    </div>
+                    <FiMoreVertical
+                        onClick={() => {
+                            setShowMenu(!showMenu);
+                        }}
+                    />
+                    {showMenu && (
+                        <div className="topRightPanel" >
+                            Delete
+                        </div>
+                    )}
                 </div>
             </div>
             <hr className="hrh" />

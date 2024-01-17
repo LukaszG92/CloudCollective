@@ -1,9 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+import Topbar from "../Topbar/Topbar";
 
 function Profile() {
     return (
         <>
+            <Topbar />
             <ProfileContainer>
                 <div className="profileWrapper">
                     <div className="profilePicture">
@@ -46,6 +48,141 @@ function Profile() {
             </ProfileContainer>
             <ProfilePosts>
                 <div className="postsWrapper">
+                    <div className="profilePostWrapper">
+                        <div className="profilePost">
+                            <img
+                                src={"http://localhost:3000/images/defaultpost.jpg"}
+                                alt=""
+                                className="profilePostImg"
+                            />
+                        </div>
+                    </div>
+                    <div className="profilePostWrapper">
+                        <div className="profilePost">
+                            <img
+                                src={"http://localhost:3000/images/defaultpost.jpg"}
+                                alt=""
+                                className="profilePostImg"
+                            />
+                        </div>
+                    </div>
+                    <div className="profilePostWrapper">
+                        <div className="profilePost">
+                            <img
+                                src={"http://localhost:3000/images/defaultpost.jpg"}
+                                alt=""
+                                className="profilePostImg"
+                            />
+                        </div>
+                    </div>
+                    <div className="profilePostWrapper">
+                        <div className="profilePost">
+                            <img
+                                src={"http://localhost:3000/images/defaultpost.jpg"}
+                                alt=""
+                                className="profilePostImg"
+                            />
+                        </div>
+                    </div>
+                    <div className="profilePostWrapper">
+                        <div className="profilePost">
+                            <img
+                                src={"http://localhost:3000/images/defaultpost.jpg"}
+                                alt=""
+                                className="profilePostImg"
+                            />
+                        </div>
+                    </div>
+                    <div className="profilePostWrapper">
+                        <div className="profilePost">
+                            <img
+                                src={"http://localhost:3000/images/defaultpost.jpg"}
+                                alt=""
+                                className="profilePostImg"
+                            />
+                        </div>
+                    </div>
+                    <div className="profilePostWrapper">
+                        <div className="profilePost">
+                            <img
+                                src={"http://localhost:3000/images/defaultpost.jpg"}
+                                alt=""
+                                className="profilePostImg"
+                            />
+                        </div>
+                    </div>
+                    <div className="profilePostWrapper">
+                        <div className="profilePost">
+                            <img
+                                src={"http://localhost:3000/images/defaultpost.jpg"}
+                                alt=""
+                                className="profilePostImg"
+                            />
+                        </div>
+                    </div>
+                    <div className="profilePostWrapper">
+                        <div className="profilePost">
+                            <img
+                                src={"http://localhost:3000/images/defaultpost.jpg"}
+                                alt=""
+                                className="profilePostImg"
+                            />
+                        </div>
+                    </div>
+                    <div className="profilePostWrapper">
+                        <div className="profilePost">
+                            <img
+                                src={"http://localhost:3000/images/defaultpost.jpg"}
+                                alt=""
+                                className="profilePostImg"
+                            />
+                        </div>
+                    </div>
+                    <div className="profilePostWrapper">
+                        <div className="profilePost">
+                            <img
+                                src={"http://localhost:3000/images/defaultpost.jpg"}
+                                alt=""
+                                className="profilePostImg"
+                            />
+                        </div>
+                    </div>
+                    <div className="profilePostWrapper">
+                        <div className="profilePost">
+                            <img
+                                src={"http://localhost:3000/images/defaultpost.jpg"}
+                                alt=""
+                                className="profilePostImg"
+                            />
+                        </div>
+                    </div>
+                    <div className="profilePostWrapper">
+                        <div className="profilePost">
+                            <img
+                                src={"http://localhost:3000/images/defaultpost.jpg"}
+                                alt=""
+                                className="profilePostImg"
+                            />
+                        </div>
+                    </div>
+                    <div className="profilePostWrapper">
+                        <div className="profilePost">
+                            <img
+                                src={"http://localhost:3000/images/defaultpost.jpg"}
+                                alt=""
+                                className="profilePostImg"
+                            />
+                        </div>
+                    </div>
+                    <div className="profilePostWrapper">
+                        <div className="profilePost">
+                            <img
+                                src={"http://localhost:3000/images/defaultpost.jpg"}
+                                alt=""
+                                className="profilePostImg"
+                            />
+                        </div>
+                    </div>
                     <div className="profilePostWrapper">
                         <div className="profilePost">
                             <img
@@ -215,10 +352,11 @@ const ProfilePosts = styled.div`
         flex-wrap: wrap;
     }
     .profilePostWrapper {
+        padding: 1%;
         aspect-ratio: 1 / 1;
         flex-grow: 1;
-        width: 33.33%;
-        max-width: 33.33%;
+        width: 30;
+        max-width: 30%;
         display: flex;
     }
     .profilePost {

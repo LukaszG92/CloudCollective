@@ -3,15 +3,13 @@ import styled from "styled-components";
 import Feed from "../Feed";
 import Rightbar from "../Rightbar/Rightbar";
 import "react-notifications/lib/notifications.css";
-import Topbar from "../Topbar";
-import Navbar from "../Navbar/Navbar"
+import Topbar from "../Topbar/Topbar";
 
 function Home() {
     return (
         <>
             <Topbar />
             <HomeContainer>
-                <Navbar />
                 <Feed />
                 <Rightbar />
             </HomeContainer>
