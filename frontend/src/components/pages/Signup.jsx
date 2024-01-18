@@ -86,7 +86,9 @@ function Signup() {
                                     className="signupInput"
                                 />
 
-                                <button className="signupButton">Submit</button>
+                                <button className="signupButton" onClick={() => {
+                                    navigate(`/`);}}>
+                                    Submit</button>
                             </form>
                         </div>
                     </div>

@@ -105,7 +105,7 @@ function Topbar() {
                             <img
                                 className="TopbarIcon"
                                 onClick={() => {
-                                    navigate("/explore");
+                                    navigate("/explore", { state: {'username':'username'} });
                                 }}
                                 alt=""
                                 src="http://localhost:3000/images/explore.png"
@@ -115,7 +115,7 @@ function Topbar() {
                             <img
                                 className="TopbarIcon"
                                 onClick={() => {
-                                    setShowMenu(!showMenu);
+                                    navigate("/messages")
                                 }}
                                 alt=""
                                 src="http://localhost:3000/images/send.png"
@@ -139,18 +139,17 @@ function Topbar() {
                         />
                         {showMenu && (
                             <div className="TopbarMenu">
-                <span
-                    className="menuItems"
-                    onClick={() => {
-                        navigate(`/profile`);
-                    }}
-                >
-                  Profil
-                </span>
-
-                                <span className="menuItems">
-                  Logout
-                </span>
+                                <span
+                                    className="menuItems"
+                                    onClick={() => {
+                                        navigate(`/profile`);
+                                    }}
+                                > Profilo </span>
+                                <span className="menuItems"
+                                      onClick={() => {
+                                          navigate(`/login`);
+                                      }}
+                                > Logout </span>
                             </div>
                         )}
                     </div>

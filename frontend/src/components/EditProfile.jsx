@@ -8,7 +8,7 @@ function EditProfile(props) {
                 <div className="editProfileLeft">
                     <label className="fileupload" htmlFor="file">
                         <img
-                          src={"http://localhost:3000/image/defaultavatar.png"
+                          src={"http://localhost:3000/images/defaultavatar.png"
                           }
                           alt=""
                           className="editProfileLeftImg"

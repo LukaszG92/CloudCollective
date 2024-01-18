@@ -89,7 +89,9 @@ function Login() {
                                         required
                                         className="loginInput"
                                     />
-                                    <button className="loginButton">Connect</button>
+                                    <button className="loginButton" onClick={() => {
+                                        navigate(`/`);
+                                    }}>Connect</button>
                                 </form>
                             </div>
                         </div>

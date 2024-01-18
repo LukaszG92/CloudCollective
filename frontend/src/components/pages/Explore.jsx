@@ -1,8 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import Topbar from "../Topbar/Topbar";
+import {useLocation} from 'react-router-dom';
 
 function Explore() {
+    let location = useLocation();
+    console.log(location.state.username);
     return(
     <>
         <Topbar/>

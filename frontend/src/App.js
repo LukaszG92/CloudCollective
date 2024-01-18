@@ -5,6 +5,7 @@ import GlobalStyles from "./components/GlobalStyle";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Profile from "./components/pages/Profile";
 import Explore from "./components/pages/Explore";
+import Messages from "./components/pages/Messages";
 
 function App() {
     return (
@@ -14,6 +15,7 @@ function App() {
           <BrowserRouter>
               <Routes>
                   <Route path="/" element={<Home />} />
+                  <Route path="/messages" element={<Messages/>} />
                   <Route path="/explore" element={<Explore/>} />
                   <Route path="/profile" element={<Profile/>} />
                   <Route path="/login" element={<Login/>} />

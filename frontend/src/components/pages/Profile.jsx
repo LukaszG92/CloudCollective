@@ -1,10 +1,28 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import Topbar from "../Topbar/Topbar";
+import EditProfile from "../EditProfile";
+import Modal from "../UI/Modal";
 
 function Profile() {
+
+    const [showEditProfile, setshowEditProfile] = useState(false);
+
+    const hideEditProfileHandler = () => {
+        setshowEditProfile(false);
+    };
+    const showEditProfileHandler = (e) => {
+        e.preventDefault();
+        setshowEditProfile(true);
+    };
+
     return (
         <>
+            {showEditProfile && (
+                <Modal onClose={hideEditProfileHandler}>
+                    <EditProfile onClose={hideEditProfileHandler} />
+                </Modal>
+            )}
             <Topbar />
             <ProfileContainer>
                 <div className="profileWrapper">
@@ -18,12 +36,16 @@ function Profile() {
                     <div className="profileData">
                         <div className="profileSettings">
                             <span className="profileSettingsUsername">L</span>
-                                <a className="profileSettingsButton" href="/">
-                                    Edit profile
-                                </a>
-                                <button className="rightbarFollowButton">
-                                    Follow
-                                </button>
+                            <a
+                                className="profileSettingsButton"
+                                onClick={showEditProfileHandler}
+                                href="/"
+                            >
+                                Edit profile
+                            </a>
+                            <button className="rightbarFollowButton">
+                                Follow
+                            </button>
                         </div>
                         <div className="profileInfo">
                             <span className="profileInfoPost">
@@ -355,7 +377,7 @@ const ProfilePosts = styled.div`
         padding: 1%;
         aspect-ratio: 1 / 1;
         flex-grow: 1;
-        width: 30;
+        width: 30%;
         max-width: 30%;
         display: flex;
     }
