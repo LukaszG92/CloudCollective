@@ -1,18 +1,21 @@
 import styled from "styled-components";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import RightbarUser from './RightbarUser'
+import { AuthContext} from "../../context/auth-context";
 
-function Rightbar() {
+function Rightbar(props) {
     const [Followings, setFollowings] = useState([]);
+    const [unfollowed, setUnfollowed] = useState(false);
+    const auth = useContext(AuthContext);
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const response = await fetch('http://localhost:8000/api/users/LG/followings');
+            const response = await fetch('http://localhost:8000/api/users/'+auth.username+'/followings');
             const responseData = await response.json();
             setFollowings(responseData.data.followings)
         };
         fetchUsers();
-    }, []);
+    }, [unfollowed]);
 
     return (
     <RightbarContainer>
@@ -22,6 +25,8 @@ function Rightbar() {
                 {Followings.map((f) => (
                     <RightbarUser
                         username = {f}
+                        unfollowed = {unfollowed}
+                        setUnfollowed = {setUnfollowed}
                     />
                 ))}
             </div>
@@ -104,5 +109,23 @@ const RightbarContainer = styled.div`
   @media (max-width: 780px) {
     display: none;
   }
+
+    .rightbarFollowButton {
+        margin: auto;
+        border: none;
+        background-color: #1872f2;
+        color: white;
+        border-radius: 5px;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .rightbarFollowButton:focus {
+        outline: none;
+    }
 `;
 export default Rightbar;

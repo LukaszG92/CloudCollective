@@ -1,10 +1,28 @@
-import {Link} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
+import React, {useContext, useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import Post from "../Post";
+import {AuthContext} from "../../context/auth-context";
 
 function RightbarUser(props) {
+
+    const auth = useContext(AuthContext)
+    const navigate = useNavigate()
     const [user, setUser] = useState([]);
+
+    const unfollowHandler = async (e) => {
+        e.preventDefault();
+        let response = await fetch("http://localhost:8000/api/users/follow/" + user.username, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user: auth.username,
+            })
+        });
+        props.setUnfollowed(!props.unfollowed);
+    }
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -16,27 +34,24 @@ function RightbarUser(props) {
     }, [props.username]);
 
     return (
-        <div className="rightbarFollowing">
-            <div className="rightbarfollowingLeft">
-                <Link
-                    style={{textDecoration: "none", color: "#000000"}}
-                    to={"/profile/" + user.username}
-                >
-                    <img
-                        src={user.profilePic}
-                        alt=""
-                        className="rightbarFollowingImg"
-                    />
-                </Link>
-                <span className="rightbarFollowingName">{user.username}</span>
+            <div className="rightbarFollowing">
+                <div className="rightbarfollowingLeft"
+                     style={{textDecoration: "none", color: "#000000"}}
+                    onClick={() => navigate("/profile/", {state: { username: user.username } } ) }>
+                        <img
+                            src={user.profilePic}
+                            alt=""
+                            className="rightbarFollowingImg"
+                        />
+                    <span className="rightbarFollowingName">{user.username}</span>
+                </div>
+                <div className="rightbarfollowingRight">
+                    <button className="rightbarFollowButton" onClick={unfollowHandler}>
+                        Unfollow
+                    </button>
+                </div>
             </div>
-            <div className="rightbarfollowingRight">
-                <span className="rightbarFollowingAction">
-                    UnFollow
-                </span>
-            </div>
-        </div>
-    )
+        );
 }
 
 export default RightbarUser;

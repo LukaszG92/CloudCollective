@@ -1,33 +1,30 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import SearchUser from "./SearchUser";
 
-function Search({ data, hideSearch }) {
+function Search(props) {
+
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            const response = await fetch('http://localhost:8000/api/users/search/'+props.search);
+            const responseData = await response.json();
+            console.log(responseData)
+            setUsers(responseData.data.users)
+        };
+        fetchUsers();
+    }, [props.search]);
+
     return (
         <SearchContainer>
             <div className="searchWrapper">
-                <div className="users">
-                        <Link
-                            style={{ textDecoration: "none" }}
-                            to={`/profile/$Username`}
-                            onClick={hideSearch}
-                        >
-                            <div  className="user">
-                                <div className="userRight">
-                                    <img
-                                        src="http://localhost:3000/images/defaultavatar.png"
-                                        alt=""
-                                        className="searchImg"
-                                    />
-                                </div>
-
-                                <div className="userLeft">
-                                    <span>username</span>
-                                </div>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
+                {users.map( (u) => (
+                    <SearchUser
+                        user={u}
+                    />
+                ))}
             </div>
         </SearchContainer>
     );

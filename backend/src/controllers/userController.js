@@ -49,6 +49,9 @@ exports.signin = (req, res) => {
             res.status(200).send({
                 status: "success",
                 message: "logged in successfully",
+                data: {
+                    username: result['dataValues']['username']
+                }
             });
         })
     } catch (e) {
@@ -60,7 +63,7 @@ exports.signin = (req, res) => {
 }
 
 exports.updateUser = (req, res) => {
-    let username = req.session.user;
+    let username = req.headers.authorization;
     User.findOne({where : {
             'username' : username
         }
@@ -68,11 +71,18 @@ exports.updateUser = (req, res) => {
         user.update({
             'nome' : req.body.nome,
             'cognome' : req.body.cognome,
-            'password' : req.body.password,
+            'bio' : req.body.bio,
             'mail' : req.body.mail,
-            'profilePic': req.body.proPic
+            'profilePic': req.body.profilePic
         }).then(result => {
-            console.log(result)
+            let user = result['dataValues']
+            res.status(200).send({
+                status: "success",
+                message: "user retrieved successfully",
+                data: {
+                    user: user
+                },
+            });
         }).catch(err => {
             console.log(err)
         })
@@ -80,6 +90,7 @@ exports.updateUser = (req, res) => {
 }
 
 exports.searchUser = (req, res) => {
+    console.log("Search User");
     let username = req.params.username;
     User.findAll({
         where: {
@@ -89,7 +100,18 @@ exports.searchUser = (req, res) => {
             ['username', 'ASC']
         ]
     }).then(result => {
-        console.log(result)
+        let users = []
+        result.forEach( user => (
+            users.push(user['dataValues'])
+        ))
+        console.log(users);
+        res.status(200).send({
+            status: "success",
+            message: "user retrieved successfully",
+            data: {
+                users: users
+            },
+        });
     }).catch(err => {
         console.log(err)
     })
@@ -103,10 +125,9 @@ exports.getUser = (req, res) => {
         }
     }).then(result => {
         let user = result['dataValues']
-        console.log(user)
         res.status(200).send({
             status: "success",
-            message: "followings retrieved successfully",
+            message: "user retrieved successfully",
             data: {
                 user: user
             },
@@ -124,7 +145,13 @@ exports.getFollowers = (req, res) => {
         results.forEach(follower => {
             followers.push(follower['dataValues']['follower'])
         })
-        console.log(followers);
+        res.status(200).send({
+            status: "success",
+            message: "followings retrieved successfully",
+            data: {
+                followers: followers
+            },
+        });
     })
 }
 
@@ -157,7 +184,7 @@ exports.getFollowing = (req, res) => {
 }
 
 exports.follow = (req, res) => {
-    let follower = req.session.user;
+    let follower = req.body.user;
     let following = req.params.user;
     Follow.count({
         where: {
@@ -171,6 +198,10 @@ exports.follow = (req, res) => {
                 'following':following
             }).then(result => {
                 console.log(result)
+                res.status(200).send({
+                    status: "success",
+                    message: "followings retrieved successfully",
+                });
             }).catch(err => {
                 console.log(err)
             })
@@ -181,8 +212,12 @@ exports.follow = (req, res) => {
                     'following': following
                 }
             }).then(result => {
-                    console.log(result)
-                }).catch(err => {
+                console.log(result)
+                res.status(200).send({
+                    status: "success",
+                    message: "followings retrieved successfully",
+                });
+            }).catch(err => {
                 console.log(err)
             })
         })

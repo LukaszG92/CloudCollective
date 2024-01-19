@@ -1,11 +1,20 @@
-import React, {useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import styled from "styled-components";
 import Topbar from "../Topbar/Topbar";
 import EditProfile from "../EditProfile";
 import Modal from "../UI/Modal";
+import {useLocation, useNavigate} from "react-router-dom";
+import ProfilePost from "../ProfilePost";
+import {AuthContext} from "../../context/auth-context";
 
 function Profile() {
-
+    const auth = useContext(AuthContext)
+    const { state } = useLocation();
+    const [buttonText, setButtonText] = useState("");
+    const [posts, setPosts] = useState([])
+    const [userData, setUserData] = useState({});
+    const [follower, setFollower] = useState([]);
+    const [following, setFollowing] = useState([]);
     const [showEditProfile, setshowEditProfile] = useState(false);
 
     const hideEditProfileHandler = () => {
@@ -16,11 +25,59 @@ function Profile() {
         setshowEditProfile(true);
     };
 
+    const followHandler = async (e) => {
+        e.preventDefault();
+        let response = await fetch("http://localhost:8000/api/users/follow/" + userData.username, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user: auth.username,
+            })
+        });
+        window.location.reload();
+    }
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const response = await fetch('http://localhost:8000/api/users/u/'+state.username);
+            const responseData = await response.json();
+            setUserData(responseData.data.user);
+        };
+        fetchUserData();
+        const fetchPost = async () => {
+            const response = await fetch('http://localhost:8000/api/posts/u/'+state.username);
+            const responseData = await response.json();
+            setPosts(responseData.data.posts)
+        };
+        fetchPost();
+        const fetchFollowing = async () => {
+            const response = await fetch('http://localhost:8000/api/users/'+state.username+'/followings');
+            const responseData = await response.json();
+            setFollowing(responseData.data.followings)
+        };
+        fetchFollowing();
+        const fetchFollower = async () => {
+            const response = await fetch('http://localhost:8000/api/users/'+state.username+'/followers');
+            const responseData = await response.json();
+            console.log(responseData.data.followers)
+            setFollower(responseData.data.followers)
+            if(responseData.data.followers.includes(auth.username))
+                setButtonText("Unfollow");
+            else
+                setButtonText("Follow");
+        };
+        fetchFollower();
+    }, [state.username, buttonText]);
+
     return (
         <>
             {showEditProfile && (
                 <Modal onClose={hideEditProfileHandler}>
-                    <EditProfile onClose={hideEditProfileHandler} />
+                    <EditProfile onClose={hideEditProfileHandler}
+                                 setUserData={setUserData}
+                                 user={userData}/>
                 </Modal>
             )}
             <Topbar />
@@ -28,210 +85,57 @@ function Profile() {
                 <div className="profileWrapper">
                     <div className="profilePicture">
                         <img
-                            src={'http://localhost:3000/images/defaultavatar.png'}
+                            src={userData.profilePic}
                             alt=""
                             className="ProfilePictureImg"
                         />
                     </div>
                     <div className="profileData">
                         <div className="profileSettings">
-                            <span className="profileSettingsUsername">L</span>
-                            <a
-                                className="profileSettingsButton"
-                                onClick={showEditProfileHandler}
-                                href="/"
-                            >
-                                Edit profile
-                            </a>
-                            <button className="rightbarFollowButton">
-                                Follow
-                            </button>
+                            <span className="profileSettingsUsername">{userData.username}</span>
+                            { (userData.username === auth.username) ?
+                                <a
+                                    className="profileSettingsButton"
+                                    onClick={showEditProfileHandler}
+                                    href="/"
+                                >
+                                    Edit profile
+                                </a>
+                                :
+                                <button className="rightbarFollowButton" onClick={followHandler}>
+                                    {buttonText}
+                                </button>
+                            }
                         </div>
                         <div className="profileInfo">
                             <span className="profileInfoPost">
                                 <span className="profileInfoNum"></span>
-                                5 Posts
+                                {posts.length} Posts
                             </span>
                             <span className="profileInfoFollowers">
                                 <span className="profileInfoNum"></span>
-                                5 followers
+                                {follower.length} followers
                             </span>
                             <span className="profileInfoFollowings">
                                 <span className="profileInfoNum"></span>
-                                5 followings
+                                {following.length} followings
                             </span>
                         </div>
                         <div className="profileBio">
-                            <span className="profileBioUsername">L</span>
-                            <span className="profileBioBio">Bio</span>
+                            <span className="profileBioUsername">{userData.nome} {userData.cognome}</span>
+                            <span className="profileBioBio">{userData.bio}</span>
                         </div>
                     </div>
                 </div>
             </ProfileContainer>
             <ProfilePosts>
                 <div className="postsWrapper">
-                    <div className="profilePostWrapper">
-                        <div className="profilePost">
-                            <img
-                                src={"http://localhost:3000/images/defaultpost.jpg"}
-                                alt=""
-                                className="profilePostImg"
+                    {posts.map( (p) => (
+                            <ProfilePost
+                                postId = {p}
                             />
-                        </div>
-                    </div>
-                    <div className="profilePostWrapper">
-                        <div className="profilePost">
-                            <img
-                                src={"http://localhost:3000/images/defaultpost.jpg"}
-                                alt=""
-                                className="profilePostImg"
-                            />
-                        </div>
-                    </div>
-                    <div className="profilePostWrapper">
-                        <div className="profilePost">
-                            <img
-                                src={"http://localhost:3000/images/defaultpost.jpg"}
-                                alt=""
-                                className="profilePostImg"
-                            />
-                        </div>
-                    </div>
-                    <div className="profilePostWrapper">
-                        <div className="profilePost">
-                            <img
-                                src={"http://localhost:3000/images/defaultpost.jpg"}
-                                alt=""
-                                className="profilePostImg"
-                            />
-                        </div>
-                    </div>
-                    <div className="profilePostWrapper">
-                        <div className="profilePost">
-                            <img
-                                src={"http://localhost:3000/images/defaultpost.jpg"}
-                                alt=""
-                                className="profilePostImg"
-                            />
-                        </div>
-                    </div>
-                    <div className="profilePostWrapper">
-                        <div className="profilePost">
-                            <img
-                                src={"http://localhost:3000/images/defaultpost.jpg"}
-                                alt=""
-                                className="profilePostImg"
-                            />
-                        </div>
-                    </div>
-                    <div className="profilePostWrapper">
-                        <div className="profilePost">
-                            <img
-                                src={"http://localhost:3000/images/defaultpost.jpg"}
-                                alt=""
-                                className="profilePostImg"
-                            />
-                        </div>
-                    </div>
-                    <div className="profilePostWrapper">
-                        <div className="profilePost">
-                            <img
-                                src={"http://localhost:3000/images/defaultpost.jpg"}
-                                alt=""
-                                className="profilePostImg"
-                            />
-                        </div>
-                    </div>
-                    <div className="profilePostWrapper">
-                        <div className="profilePost">
-                            <img
-                                src={"http://localhost:3000/images/defaultpost.jpg"}
-                                alt=""
-                                className="profilePostImg"
-                            />
-                        </div>
-                    </div>
-                    <div className="profilePostWrapper">
-                        <div className="profilePost">
-                            <img
-                                src={"http://localhost:3000/images/defaultpost.jpg"}
-                                alt=""
-                                className="profilePostImg"
-                            />
-                        </div>
-                    </div>
-                    <div className="profilePostWrapper">
-                        <div className="profilePost">
-                            <img
-                                src={"http://localhost:3000/images/defaultpost.jpg"}
-                                alt=""
-                                className="profilePostImg"
-                            />
-                        </div>
-                    </div>
-                    <div className="profilePostWrapper">
-                        <div className="profilePost">
-                            <img
-                                src={"http://localhost:3000/images/defaultpost.jpg"}
-                                alt=""
-                                className="profilePostImg"
-                            />
-                        </div>
-                    </div>
-                    <div className="profilePostWrapper">
-                        <div className="profilePost">
-                            <img
-                                src={"http://localhost:3000/images/defaultpost.jpg"}
-                                alt=""
-                                className="profilePostImg"
-                            />
-                        </div>
-                    </div>
-                    <div className="profilePostWrapper">
-                        <div className="profilePost">
-                            <img
-                                src={"http://localhost:3000/images/defaultpost.jpg"}
-                                alt=""
-                                className="profilePostImg"
-                            />
-                        </div>
-                    </div>
-                    <div className="profilePostWrapper">
-                        <div className="profilePost">
-                            <img
-                                src={"http://localhost:3000/images/defaultpost.jpg"}
-                                alt=""
-                                className="profilePostImg"
-                            />
-                        </div>
-                    </div>
-                    <div className="profilePostWrapper">
-                        <div className="profilePost">
-                            <img
-                                src={"http://localhost:3000/images/defaultpost.jpg"}
-                                alt=""
-                                className="profilePostImg"
-                            />
-                        </div>
-                    </div>
-                    <div className="profilePostWrapper">
-                        <div className="profilePost">
-                            <img
-                                src={"http://localhost:3000/images/defaultpost.jpg"}
-                                alt=""
-                                className="profilePostImg"
-                            />
-                        </div>
-                    </div>
-                    <div className="profilePostWrapper">
-                        <div className="profilePost">
-                            <img
-                                src={"http://localhost:3000/images/defaultpost.jpg"}
-                                alt=""
-                                className="profilePostImg"
-                            />
-                        </div>
-                    </div>
+                        )
+                    )}
                 </div>
             </ProfilePosts>
         </>

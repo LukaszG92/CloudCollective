@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect, useContext} from 'react';
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from '../../context/auth-context';
 import styled from "styled-components";
 
 
 function Login() {
+    const auth = useContext(AuthContext);
     const navigate = useNavigate();
     const [show1, setshow1] = useState(1);
     const [username, setUsername] = useState('');
@@ -22,9 +24,9 @@ function Login() {
         };
     }, [show1]);
 
-    const HandlerLoginForm = (e) => {
+    const HandlerLoginForm = async (e) => {
         e.preventDefault();
-        fetch('http://localhost:8000/api/users/login', {
+        let response = await fetch('http://localhost:8000/api/users/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -34,6 +36,11 @@ function Login() {
                 password
             })
         })
+        let responseData = await response.json();
+        console.log(responseData.data.username);
+        auth.login(responseData.data.username);
+        console.log(auth.username)
+        navigate("/");
     };
 
     return (
@@ -89,9 +96,7 @@ function Login() {
                                         required
                                         className="loginInput"
                                     />
-                                    <button className="loginButton" onClick={() => {
-                                        navigate(`/`);
-                                    }}>Connect</button>
+                                    <button className="loginButton" onClick={HandlerLoginForm}>Connect</button>
                                 </form>
                             </div>
                         </div>

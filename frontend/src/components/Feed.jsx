@@ -1,16 +1,25 @@
 import styled from "styled-components";
 import Post from './Post'
-import { useState, useRef, useEffect} from "react";
+import {useState, useRef, useEffect, useContext} from "react";
+import { AuthContext } from "../context/auth-context"
 
 function Feed(props) {
+    const auth = useContext(AuthContext)
     const [currPage, setCurrPage] = useState(1);
     const [Posts, setPosts] = useState([]);
     const listInnerRef = useRef();
 
     useEffect(() => {
         const fetchPost = async () => {
-            const response = await fetch('http://localhost:8000/api/posts/feed');
+            console.log("Auth:"+auth.username)
+            const response = await fetch('http://localhost:8000/api/posts/feed', {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: auth.username,
+                }
+            });
             const responseData = await response.json();
+            console.log(responseData.data.posts);
             setPosts(responseData.data.posts)
         };
         fetchPost();
@@ -32,12 +41,7 @@ function Feed(props) {
                 <div onScroll={onScroll} className="FeedWrapper">
                     {Posts.map((post) => (
                         <Post
-                            key={post.id}
-                            username={post.creatorUsername}
-                            imageSrc={post.image}
-                            caption={post.description}
-                            comments={[]}
-                            dateCreated={post.createdAt}
+                            post={post}
                         ></Post>
                     ))}
                 </div>
@@ -47,7 +51,7 @@ function Feed(props) {
 }
 
 const FeedContainer = styled.div`
-    width: 40%; 
+    width: 50%; 
     padding: 0 70px;
     .FeedWrapper {
         height: calc(100vh - 63px);

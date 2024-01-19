@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FiSearch } from "react-icons/fi";
@@ -10,9 +10,11 @@ import Share from "./Share";
 import Search from "./Search";
 import Backdrop from "../UI/Backdrop";
 import SearchBarMobile from "./SearchBarMobile";
-
+import SearchUser from "./SearchUser";
+import { AuthContext } from "../../context/auth-context";
 
 function Topbar() {
+    const auth = useContext(AuthContext);
     const navigate = useNavigate();
     const [showMenu, setShowMenu] = useState(false);
     const [showAddPost, setShowAddPost] = useState(false);
@@ -34,22 +36,34 @@ function Topbar() {
         setShowBarSearchMobile(false);
         setshowSearch(false);
     };
-    const searchHandler = (e) => {
-        if (searchquery.length < 1) {
+    const searchHandler = async (e) => {
+        setSearchquery(e.target.value)
+        if (e.target.value.length < 1) {
             setshowSearch(false);
         } else {
             setshowSearch(true);
+            let response = await fetch("http://localhost:8000/api/users/search/"+e.target.value)
+            console.log(response)
+            let responseData = await response.json();
+            console.log(responseData)
+            setusersSearch(responseData.data.users);
         }
-        setSearchquery(e.target.value);
     };
 
     return (
         <>
             {showBarSearchMobile && (
-                <SearchBarMobile
-                    searchHandler={searchHandler}
-                    hidebar={hideBarSearchMobileHandler}
-                />
+                <SearchBarMobileContainer>
+                    <div className="searchbar">
+                        <AiOutlineSearch className="SearchIcon" />
+                        <input
+                            onChange={searchHandler}
+                            type="text"
+                            className="searchInput"
+                            placeholder="Search"
+                        />
+                    </div>
+                </SearchBarMobileContainer>
             )}
             {showSearch && <Backdrop onClose={hideBarSearchMobileHandler} />}
             {showAddPost && (
@@ -75,12 +89,16 @@ function Topbar() {
                     </div>
                     {showSearch && (
                         <>
-                            <Search
-                                data={usersSearch}
-                                hideSearch={() => {
-                                    setshowSearch(false);
-                                }}
-                            />
+                            <SearchContainer onClose={hideBarSearchMobileHandler}>
+                                <div className="searchWrapper">
+                                    {usersSearch.map( (user) => (
+                                        <SearchUser
+                                            onClose={hideBarSearchMobileHandler}
+                                            user = {user}
+                                        />
+                                    ))}
+                                </div>
+                            </SearchContainer>
                         </>
                     )}
                 </div>
@@ -142,11 +160,12 @@ function Topbar() {
                                 <span
                                     className="menuItems"
                                     onClick={() => {
-                                        navigate(`/profile`);
+                                        navigate(`/profile`, {state:{username: auth.username}});
                                     }}
                                 > Profilo </span>
                                 <span className="menuItems"
                                       onClick={() => {
+                                          auth.logout();
                                           navigate(`/login`);
                                       }}
                                 > Logout </span>
@@ -159,6 +178,83 @@ function Topbar() {
     );
 }
 
+const SearchBarMobileContainer = styled.div`
+  display: flex;
+  background-color: aliceblue;
+  height: 50px;
+  width: 100%;
+  top: 0;
+  z-index: 30;
+  position: fixed;
+  .searchbar {
+    width: 100%;
+    height: 100%;
+    background-color: rgb(218, 218, 218);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+  }
+  .searchInput {
+    border: none;
+    width: 70%;
+    background-color: rgb(218, 218, 218);
+
+    &:focus {
+      outline: none;
+    }
+  }
+`;
+const SearchContainer = styled.div`
+  position: fixed;
+  width: 100vw;
+  top: 51px;
+  display: flex;
+  justify-content: center;
+
+  @media (max-width: 655px) {
+    left: -4px;
+  }
+  .searchWrapper {
+    z-index: 3033;
+    width: 400px;
+    background-color: rgb(243, 243, 243);
+    position: relative;
+    border-radius: 0px 0px 13px 13px;
+    -webkit-border-radius: 0px 0px 13px 13px;
+    -moz-border-radius: 0px 0px 13px 13px;
+    border: 3px solid #ebebeb;
+    box-shadow: 0px 24px 41px -7px rgba(28, 28, 28, 0.41);
+    -webkit-box-shadow: 0px 24px 41px -7px rgba(28, 28, 28, 0.41);
+    -moz-box-shadow: 0px 24px 41px -7px rgba(28, 28, 28, 0.41);
+  }
+  .users {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .user {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .userRight {
+    width: 20%;
+  }
+  .userLeft {
+    width: 100%;
+    > span {
+      color: black;
+    }
+  }
+  .searchImg {
+    display: block;
+    padding: 5px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+  }
+`;
 const FiSearchStyled = styled(FiSearch)`
   font-size: 20px;
   margin-right: 10px;

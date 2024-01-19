@@ -1,68 +1,134 @@
 import PropTypes from 'prop-types';
 import { FiMoreVertical } from "react-icons/fi";
-import { Link } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import styled from "styled-components";
 import {formatDistance} from "date-fns";
 import {AiFillHeart} from "react-icons/ai";
-import {useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
+import {AuthContext} from "../context/auth-context";
+import Modal from "./UI/Modal";
+import EditPost from "./EditPost";
 
-export default function Post( content ) {
+export default function Post( props ) {
+    const auth = useContext(AuthContext)
+    const navigate = useNavigate()
+    const [post, setPost] = useState(props.post)
+    const [isLiked, setIsLiked] = useState(false);
+    const [likesCount, setLikesCount] = useState(0)
+    const [likes, setLikes] = useState([]);
+    const [showEditPost, setShowEditPost] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
+    const [profilePic, setProfilePic] = useState("");
+
+    const likeHandler = async () => {
+        let response = await fetch("http://localhost:8000/api/posts/"+post.id+"/like", {
+            headers: {
+                Authorization: auth.username
+            }
+        })
+        let responseData = await response.json();
+        setLikesCount(isLiked ? likes.length - 1 : likes.length + 1);
+    }
+
+    const deletePostHandler = async () => {
+        let response = await fetch("http://localhost:8000/api/posts/"+post.id, {
+            method: 'DELETE'
+        })
+        window.location.reload();
+    }
+
+    useEffect(() => {
+        const fetchProfilePic = async () => {
+            const response = await fetch('http://localhost:8000/api/users/u/'+post.creatorUsername);
+            const responseData = await response.json();
+            setProfilePic(responseData.data.user.profilePic)
+        };
+        fetchProfilePic();
+    }, [post.creatorUsername]);
+
+    useEffect(() => {
+        const fetchPostLikes = async () => {
+            let response = await fetch('http://localhost:8000/api/posts/' + post.id + '/likes');
+            let responseData = await response.json();
+            console.log(responseData.data.likes);
+            setLikes(responseData.data.likes);
+        }
+        fetchPostLikes();
+    }, [likesCount])
+
+    useEffect(() => {
+        const getIsLiked = () => {
+            setIsLiked(likes.includes(auth.username));
+        }
+        getIsLiked();
+    }, [likes]);
 
     return (
         <PostContainer>
-            <div className="postTop">
-                <div className="postTopLeft">
-                    <Link to={"/profile/" + content.username}>
-                        <img
-                            src={'http://localhost:3000/images/defaultavatar.png'}
-                            alt=""
-                            className="postProfileImg"
-                        />
-                    </Link>
-                    <Link
-                        style={{ textDecoration: "none", color: "#000000" }}
-                        to={"/profile/" + content.username}
-                    >
-                        <span className="postUsername">{content.username}</span>
-                    </Link>
+            {showEditPost && (
+                <Modal onClose={()=>{
+                    setShowEditPost(false)
+                    setShowMenu(false)
+                    }
+                }>
+                    <EditPost onClose={()=>{
+                        setShowEditPost(false)
+                        setShowMenu(false)
+                        }
+                    }
+                                 setPost={setPost}
+                                 post={post}/>
+                </Modal>
+            )}
+            <div key={post.id} className="postTop">
+                <div className="postTopLeft"
+                     onClick={() => {navigate("/profile", {state:{username:post.creatorUsername}})}}>
+                    <img
+                        src={profilePic}
+                        alt=""
+                        className="postProfileImg"
+                    />
+                    <span className="postUsername">{post.creatorUsername}</span>
                 </div>
                 <div className="postTopright">
-                    <span className="postDate"> {formatDistance(content.dateCreated, new Date())} ago</span>
-                    <FiMoreVertical
-                        onClick={() => {
-                            setShowMenu(!showMenu);
-                        }}
-                    />
+                    <span className="postDate"> {formatDistance(post.createdAt, new Date())} ago</span>
+                    {(post.creatorUsername === auth.username) &&
+                        <FiMoreVertical
+                            onClick={() => {
+                                setShowMenu(!showMenu);
+                            }}
+                        />
+                    }
                     {showMenu && (
-                        <div className="topRightPanel" >
-                            Delete
+                        <div className="TopbarMenu">
+                                <span className="menuItems" onClick={()=>{setShowEditPost(true)}}> Edit </span>
+                            <span className="menuItems" onClick={deletePostHandler}> Delete </span>
                         </div>
                     )}
                 </div>
             </div>
-            <hr className="hrh" />
+            <hr className="hrh"/>
             <div className="postCenter">
                 <div className="postImgWrapper">
                     <img
-                        src={content.imageSrc}
+                        src={post.image}
                         alt=""
                         className="postImg"
                     />
                 </div>
-                <p className="postText">{content.caption}</p>
+                <p className="postText">{post.description}</p>
             </div>
-            <hr className="hrh" />
+            <hr className="hrh"/>
             <div className="postBottom">
                 <div className="postBottomLeft">
-                    <AiFillHeart
+                    <AiFillHeart onClick={likeHandler}
                         className="likeIcon"
-                        color={"red"}
+                        color={isLiked ? "red" : "#e0e0e0ed"}
                     />
                     <span
                         className="postLikeCounter"
                     >
-              0 Likes 0 Comments
+              {likes.length} Likes 0 Comments
             </span>
                 </div>
             </div>
@@ -168,14 +234,21 @@ const PostContainer = styled.div`
     .hrh {
         opacity: 0.4;
     }
+    .TopbarMenu {
+        position: absolute;
+        top: 42px;
+        width: 120px;
+        right: -4px;
+        background-color: #f1f1f1;
+        display: flex;
+        flex-direction: column;
+        -webkit-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+        box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+    }
+    .menuItems {
+        margin: 7px;
+        border-bottom: 1px solid #e1e1e1;
+        color: black;
+        cursor: pointer;
+    }
 `;
-
-Post.propTypes = {
-    content: PropTypes.shape({
-        username: PropTypes.string.isRequired,
-        imageSrc: PropTypes.string.isRequired,
-        caption: PropTypes.string.isRequired,
-        comments: PropTypes.array.isRequired,
-        dateCreated: PropTypes.number.isRequired
-    })
-};

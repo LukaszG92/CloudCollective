@@ -20,9 +20,18 @@ exports.updatePost = (req, res) => {
         'id' : postId
         }
     }).then(post => {
-        post.update({'description': req.body.text})
+        console.log(post)
+        post.update({'description': req.body.description})
             .then(result => {
-                console.log(result)
+                console.log(result['dataValues'])
+                let post = result['dataValues']
+                res.status(200).send({
+                    status: "success",
+                    message: "Post updated successfully",
+                    data: {
+                        post: post
+                    },
+                })
             }).catch(err => {
             console.log(err)
         })
@@ -35,7 +44,10 @@ exports.deletePost = (req, res) => {
         'id' : postId
         }
     }).then(result => {
-        console.log(result)
+        res.status(200).send({
+            status: "success",
+            message: "Post deleted successfully",
+        })
     }).catch(err => {
         console.log(err)
     })
@@ -47,22 +59,30 @@ exports.findPost = (req, res) => {
             'id' : postId
         }
     }).then(result => {
-        console.log(result)
+        let post = result['dataValues']
+        res.status(200).send({
+            status: "success",
+            message: "Post retrieved successfully",
+            data: {
+                post: post
+            },
+        })
     }).catch(err => {
         console.log(err)
     })
 }
 
 exports.feed = (req, res) => {
-    let userUsername = 'LGG';
+    let userUsername = req.headers.authorization;
     Follow.findAll({where: {
-        'following' : userUsername
+        'follower' : userUsername
         }
     }).then(results => {
         let followings = [];
         results.forEach(following => {
-            followings.push({'creatorUsername': following['dataValues']['follower']})
+            followings.push({'creatorUsername': following['dataValues']['following']})
         })
+        console.log(followings);
         Post.findAll({
             where:{
                 [Op.or]: followings
@@ -75,6 +95,7 @@ exports.feed = (req, res) => {
             result.forEach(post => {
                 posts.push(post['dataValues'])
             })
+            console.log(posts)
             res.status(200).send({
                 status: "success",
                 message: "feed retrieved successfully",
@@ -95,14 +116,24 @@ exports.getUserPost = (req, res) => {
             'creatorUsername':userUsername
         }
     }).then(result => {
-        console.log(result)
+        let posts = [];
+        result.forEach(post => {
+            posts.push(post['dataValues']['id'])
+        })
+        res.status(200).send({
+            status: "success",
+            message: "feed retrieved successfully",
+            data: {
+                posts: posts
+            },
+        });
     }).catch(err => {
         console.log(err)
     })
 }
 
 exports.likePost = (req, res) => {
-    let userUsername = req.session.user;
+    let userUsername = req.headers.authorization;
     let postId = req.params.post;
     sequelize.query(`SELECT COUNT(*) as likesCount FROM likes WHERE userLike = '${userUsername}' AND postId = ${postId}`)
         .then(result => {
@@ -110,16 +141,42 @@ exports.likePost = (req, res) => {
             if(count === 0)
                 sequelize.query(`INSERT INTO likes(userLike, postId) VALUES ('${userUsername}', ${postId});`)
                     .then(result => {
-                        console.log(result)
+                        res.status(200).send({
+                            status: "success",
+                            message: "like added successfully",
+                        });
                     }).catch(err => {
                     console.log(err)
                 })
             else
                 sequelize.query(`DELETE FROM likes WHERE userLike = '${userUsername}' AND postId = ${postId};`)
                     .then(result => {
-                        console.log(result)
+                        res.status(200).send({
+                            status: "success",
+                            message: "like removed successfully",
+                        });
                     }).catch(err => {
                     console.log(err)
                 })
+        })
+}
+
+exports.getPostLikes = (req, res) => {
+    let postId = req.params.post;
+    sequelize.query(`SELECT * FROM likes WHERE postId = ${postId}`)
+        .then(result => {
+            const likes = [];
+            if(result[0].length) {
+                result[0].forEach(like => {
+                    likes.push(like['userLike']);
+                })
+            }
+            res.status(200).send({
+                status: "success",
+                message: "likes retrieved successfully",
+                data: {
+                    likes: likes
+                }
+            });
         })
 }
