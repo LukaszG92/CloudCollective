@@ -9,7 +9,7 @@ function SearchUser(props) {
         <div className="users"
              style={{textDecoration: "none"}}
              onClick={() => {
-                 navigate(`/profile`, {state:{username:props.user.username}})
+                 navigate(`/profile/${props.user.username}`)
                  props.onClose();
              }}
          >

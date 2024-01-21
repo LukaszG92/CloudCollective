@@ -7,9 +7,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Modal from "../UI/Modal";
 import Share from "./Share";
-import Search from "./Search";
 import Backdrop from "../UI/Backdrop";
-import SearchBarMobile from "./SearchBarMobile";
 import SearchUser from "./SearchUser";
 import { AuthContext } from "../../context/auth-context";
 
@@ -160,7 +158,7 @@ function Topbar() {
                                 <span
                                     className="menuItems"
                                     onClick={() => {
-                                        navigate(`/profile`, {state:{username: auth.username}});
+                                        navigate(`/profile/${auth.username}`);
                                     }}
                                 > Profilo </span>
                                 <span className="menuItems"

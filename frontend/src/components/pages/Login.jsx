@@ -3,18 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from '../../context/auth-context';
 import styled from "styled-components";
 
-
 function Login() {
     const auth = useContext(AuthContext);
     const navigate = useNavigate();
+    const [loginPageImg, setLoginPageImg] = useState("");
     const [show1, setshow1] = useState(1);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     useEffect(() => {
-        const interval = setInterval(() => {
+        const interval = setInterval(async () => {
             if (show1 < 4) {
-                setshow1(show1 + 1);
+                setshow1(show1+1)
             } else {
                 setshow1(1);
             }
@@ -23,6 +23,15 @@ function Login() {
             clearInterval(interval);
         };
     }, [show1]);
+
+    useEffect(() => {
+        const setImg = async () => {
+            const imgUrl =`http://localhost:3000/images/loginpage${show1}.png`;
+            setLoginPageImg(imgUrl)
+        }
+        setImg()
+    }, [show1]);
+
 
     const HandlerLoginForm = async (e) => {
         e.preventDefault();
@@ -46,26 +55,13 @@ function Login() {
     return (
         <LoginContainer>
             <div className="loginWrapper">
-                <div className="loginLeft">
+                <div className="loginLeft" style={ {
+                    backgroundImage: `url(\'http://localhost:3000/images/loginPage.png\')`
+                }}>
                     <div className="frontImgWrapper">
                         <img
-                            src={"http://localhost:3000/images/loginpage1.png"}
-                            className={show1 === 1 ? "frontImg show" : "frontImg hide"}
-                            alt=""
-                        />
-                        <img
-                            src={"http://localhost:3000/images/loginpage2.png"}
-                            className={show1 === 2 ? "frontImg show" : "frontImg hide"}
-                            alt=""
-                        />
-                        <img
-                            src={"http://localhost:3000/images/loginpage3.png"}
-                            className={show1 === 3 ? "frontImg show" : "frontImg hide"}
-                            alt=""
-                        />
-                        <img
-                            src={"http://localhost:3000/images/loginpage4.png"}
-                            className={show1 === 4 ? "frontImg show" : "frontImg hide"}
+                            src={loginPageImg}
+                            className="frontImg show"
                             alt=""
                         />
                     </div>
@@ -150,7 +146,7 @@ const LoginContainer = styled.div`
         position: relative;
         width: 100%;
         height: 600px;
-        background-image: url("http://localhost:3000/images/loginpage.png");
+        background-image: url("https://cloudcollective.blob.core.windows.net/images/loginPage.png?sp=r&st=2024-01-20T18:24:31Z&se=2024-01-21T02:24:31Z&sv=2022-11-02&sr=b&sig=MmB2tj1V1peauGbArZwumggohYW3D9vz88u2QGtxs7w%3D");
         min-width: 460px;
         background-repeat: no-repeat;
         background-position: right 2px;

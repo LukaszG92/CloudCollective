@@ -1,11 +1,9 @@
 import styled from "styled-components";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import { AuthContext } from "../context/auth-context";
 
 function EditProfile(props) {
-
-    const savedUser = 'LG';
     const auth = useContext(AuthContext)
     const navigate = useNavigate();
     const [nome, setNome] = useState(props.user.nome);
@@ -13,6 +11,29 @@ function EditProfile(props) {
     const [bio, setBio] = useState(props.user.bio);
     const [mail, setMail] = useState(props.user.email);
     const [profilePic, setProfilePic] = useState(props.user.profilePic)
+    const [file, setFile] = useState();
+    const [previewUrl, setPreviewUrl] = useState();
+
+    const filePickerRef = useRef();
+
+    useEffect(() => {
+        if (!file) {
+            return;
+        }
+        const fileReader = new FileReader();
+        fileReader.onload = () => {
+            setPreviewUrl(fileReader.result);
+        };
+        fileReader.readAsDataURL(file);
+    }, [file]);
+
+    const pickedHandler = event => {
+        let pickedFile;
+        if (event.target.files && event.target.files.length === 1) {
+            pickedFile = event.target.files[0];
+            setFile(pickedFile);
+        }
+    };
 
     const editProfileHandler = async (e) => {
         e.preventDefault();
@@ -41,7 +62,7 @@ function EditProfile(props) {
                 <div className="editProfileLeft">
                     <label className="fileupload" htmlFor="file">
                         <img
-                          src={profilePic}
+                          src={previewUrl ? previewUrl : profilePic }
                           alt=""
                           className="editProfileLeftImg"
                         />
@@ -51,6 +72,8 @@ function EditProfile(props) {
                           type="file"
                           id="file"
                           accept=".png,.jpeg,.jpg"
+                          onChange={pickedHandler}
+                          ref={filePickerRef}
                         />
                     </label>
                 </div>
@@ -122,7 +145,9 @@ const EditProfileContainer = styled.div`
 
     .editProfileLeftImg {
         width: 150px;
+        height: 150px;
         display: block;
+        border-radius: 50%;
     }
 
     .editProfileWrapper {

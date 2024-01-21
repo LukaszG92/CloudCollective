@@ -21,7 +21,7 @@ function RightbarUser(props) {
                 user: auth.username,
             })
         });
-        props.setUnfollowed(!props.unfollowed);
+        window.location.reload();
     }
 
     useEffect(() => {
@@ -34,10 +34,10 @@ function RightbarUser(props) {
     }, [props.username]);
 
     return (
-            <div className="rightbarFollowing">
+            <div key={user.username} className="rightbarFollowing">
                 <div className="rightbarfollowingLeft"
                      style={{textDecoration: "none", color: "#000000"}}
-                    onClick={() => navigate("/profile/", {state: { username: user.username } } ) }>
+                    onClick={() => navigate(`/profile/${user.username}`) }>
                         <img
                             src={user.profilePic}
                             alt=""
@@ -55,7 +55,3 @@ function RightbarUser(props) {
 }
 
 export default RightbarUser;
-
-Post.propTypes = {
-    username: PropTypes.string.isRequired
-}

@@ -28,11 +28,9 @@ User.belongsToMany(Post, {
     foreignKey: 'userLike'
 });
 
-sequelize.sync();
+sequelize.sync({alter:true});
 
 app.use(cors());
-app.use(cookieParser());
-app.use(session({ secret: 'cloudCollective', cookie: { maxAge: 60000 }}))
 app.use(bodyParser.json());
 app.use('/api/comments', commentRouter);
 app.use('/api/posts', postRouter);

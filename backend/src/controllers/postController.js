@@ -2,13 +2,22 @@ const Post = require('../Models/postModel')
 const Follow = require('../Models/followModel')
 const sequelize = require('../utils/database');
 const {Op} = require("sequelize");
+const fs = require("fs");
 
 exports.createPost = (req, res) => {
     Post.create({
-        'description' : req.body.text,
-        'creatorUsername' : req.session.user
+        'image': req.body.image,
+        'description' : req.body.description,
+        'creatorUsername' : req.headers.authorization
     }).then(result => {
-        console.log(result)
+        let post = result['dataValues'];
+        res.status(200).send({
+            status: "success",
+            message: "Post created successfully",
+            data: {
+                post: post
+            },
+        })
     }).catch(err => {
         console.log(err)
     })

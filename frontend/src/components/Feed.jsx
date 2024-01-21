@@ -41,6 +41,7 @@ function Feed(props) {
                 <div onScroll={onScroll} className="FeedWrapper">
                     {Posts.map((post) => (
                         <Post
+                            key={post.id}
                             post={post}
                         ></Post>
                     ))}

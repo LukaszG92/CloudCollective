@@ -3,13 +3,13 @@ import styled from "styled-components";
 import Topbar from "../Topbar/Topbar";
 import EditProfile from "../EditProfile";
 import Modal from "../UI/Modal";
-import {useLocation, useNavigate} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ProfilePost from "../ProfilePost";
 import {AuthContext} from "../../context/auth-context";
 
-function Profile() {
+function Profile(props) {
     const auth = useContext(AuthContext)
-    const { state } = useLocation();
+    const username = useParams().username;
     const [buttonText, setButtonText] = useState("");
     const [posts, setPosts] = useState([])
     const [userData, setUserData] = useState({});
@@ -36,30 +36,31 @@ function Profile() {
                 user: auth.username,
             })
         });
-        window.location.reload();
+        setButtonText(buttonText==="Unfollow"? "Follow" : "Unfollow")
     }
 
     useEffect(() => {
         const fetchUserData = async () => {
-            const response = await fetch('http://localhost:8000/api/users/u/'+state.username);
+            const response = await fetch('http://localhost:8000/api/users/u/'+username);
             const responseData = await response.json();
             setUserData(responseData.data.user);
         };
         fetchUserData();
         const fetchPost = async () => {
-            const response = await fetch('http://localhost:8000/api/posts/u/'+state.username);
+            const response = await fetch('http://localhost:8000/api/posts/u/'+username);
             const responseData = await response.json();
+            console.log(responseData.data.posts)
             setPosts(responseData.data.posts)
         };
         fetchPost();
         const fetchFollowing = async () => {
-            const response = await fetch('http://localhost:8000/api/users/'+state.username+'/followings');
+            const response = await fetch('http://localhost:8000/api/users/'+username+'/followings');
             const responseData = await response.json();
             setFollowing(responseData.data.followings)
         };
         fetchFollowing();
         const fetchFollower = async () => {
-            const response = await fetch('http://localhost:8000/api/users/'+state.username+'/followers');
+            const response = await fetch('http://localhost:8000/api/users/'+username+'/followers');
             const responseData = await response.json();
             console.log(responseData.data.followers)
             setFollower(responseData.data.followers)
@@ -69,7 +70,7 @@ function Profile() {
                 setButtonText("Follow");
         };
         fetchFollower();
-    }, [state.username, buttonText]);
+    }, [username, buttonText]);
 
     return (
         <>

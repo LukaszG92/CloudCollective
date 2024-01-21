@@ -12,13 +12,31 @@ import EditPost from "./EditPost";
 export default function Post( props ) {
     const auth = useContext(AuthContext)
     const navigate = useNavigate()
+
+    const [commentInput, setCommentInput] = useState("");
+    const [comments, setComments] = useState([]);
+    const [showPost, setShowPost] = useState(false);
     const [post, setPost] = useState(props.post)
     const [isLiked, setIsLiked] = useState(false);
-    const [likesCount, setLikesCount] = useState(0)
     const [likes, setLikes] = useState([]);
     const [showEditPost, setShowEditPost] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
     const [profilePic, setProfilePic] = useState("");
+
+    const addCommentHandler = async () => {
+        console.log(commentInput)
+        let response = await fetch("http://localhost:8000/api/comments/"+post.id+"/new", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: auth.username
+            },
+            body: JSON.stringify({
+                commentInput
+            })
+        })
+        setShowPost(!showPost);
+    }
 
     const likeHandler = async () => {
         let response = await fetch("http://localhost:8000/api/posts/"+post.id+"/like", {
@@ -27,7 +45,7 @@ export default function Post( props ) {
             }
         })
         let responseData = await response.json();
-        setLikesCount(isLiked ? likes.length - 1 : likes.length + 1);
+        setIsLiked(!isLiked);
     }
 
     const deletePostHandler = async () => {
@@ -54,7 +72,7 @@ export default function Post( props ) {
             setLikes(responseData.data.likes);
         }
         fetchPostLikes();
-    }, [likesCount])
+    }, [isLiked])
 
     useEffect(() => {
         const getIsLiked = () => {
@@ -62,6 +80,16 @@ export default function Post( props ) {
         }
         getIsLiked();
     }, [likes]);
+
+    useEffect( () =>{
+        const fetchComments = async () => {
+            let response = await fetch(`http://localhost:8000/api/comments/${post.id}`)
+            let responseData = await response.json();
+            console.log(responseData)
+            setComments(responseData.data.comments);
+        }
+        fetchComments()
+    }, [showPost])
 
     return (
         <PostContainer>
@@ -80,9 +108,43 @@ export default function Post( props ) {
                                  post={post}/>
                 </Modal>
             )}
-            <div key={post.id} className="postTop">
+            {showPost && (
+                <Modal
+                    onClose={() => {
+                        setShowPost(false);
+                    }}
+                >
+                    <ShowPostContainer>
+                        <div className="addComment">
+                            <input
+                                onChange={(e) => {
+                                    setCommentInput(e.target.value);
+                                }}
+                                className="addCommentInput"
+                                placeholder="Write your comment here..."
+                                value={commentInput}
+                                type="text"
+                            />
+                            <button className="addCommentButton" onClick={addCommentHandler}>
+                                Add Comment
+                            </button>
+                        </div>
+                        <div className="showComments">
+                            {comments.map( (c) => (
+                            <div key={c.id} className="oneComment">
+                                <div className="usernameAndCommentWrapper">
+                                    <span className="usernameComment">{c.authorUsername}</span>
+                                    <span className="Comment">{c.body}</span>
+                                </div>
+                            </div>
+                            ))}
+                        </div>
+                    </ShowPostContainer>
+                </Modal>
+            )}
+            <div className="postTop">
                 <div className="postTopLeft"
-                     onClick={() => {navigate("/profile", {state:{username:post.creatorUsername}})}}>
+                     onClick={() => {navigate(`/profile/${post.creatorUsername}`)}}>
                     <img
                         src={profilePic}
                         alt=""
@@ -120,16 +182,24 @@ export default function Post( props ) {
             </div>
             <hr className="hrh"/>
             <div className="postBottom">
-                <div className="postBottomLeft">
-                    <AiFillHeart onClick={likeHandler}
-                        className="likeIcon"
-                        color={isLiked ? "red" : "#e0e0e0ed"}
+                <div className="postBottomLeft" onClick={likeHandler}>
+                    <AiFillHeart
+                                 className="likeIcon"
+                                 color={isLiked ? "red" : "#e0e0e0ed"}
                     />
-                    <span
-                        className="postLikeCounter"
-                    >
-              {likes.length} Likes 0 Comments
-            </span>
+                    <span className="postLikeCounter">
+                        {likes.length} Likes
+                    </span>
+                </div>
+                <div className="postBottomLeft" onClick={() => {setShowPost(true)}}>
+                    <img
+                         className="commentIcon"
+                         src='http://localhost:3000/images/comment.png'
+                         alt=''
+                    />
+                    <span className="postLikeCounter">
+                        {comments.length} Comments
+                    </span>
                 </div>
             </div>
         </PostContainer>
@@ -144,15 +214,18 @@ const PostContainer = styled.div`
     box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
     margin-top: 10px;
     margin-bottom: 50px;
+
     .postTop {
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: 5px;
     }
+
     .postTopright {
         position: relative;
     }
+
     .topRightPanel {
         position: absolute;
         background-color: #eaeaea;
@@ -166,74 +239,95 @@ const PostContainer = styled.div`
         box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
         padding-top: 10px;
         text-align: center;
+
         &:hover {
             cursor: pointer;
         }
     }
+
     .postTopLeft {
         display: flex;
         align-items: center;
     }
+
     .postProfileImg {
         width: 32px;
         height: 32px;
         border-radius: 50%;
         object-fit: cover;
     }
+
     .postUsername {
         font-size: 15px;
         font-weight: 500;
         padding: 0 10px;
     }
+
     .postDate {
         font-size: 10px;
         font-weight: 500;
     }
+
     .postImgWrapper {
         padding-right: 3px;
         padding-left: 3px;
     }
+
     .postImg {
         padding-top: 5px;
         width: 100%;
         object-fit: contain;
     }
+
     .postCenter {
         display: flex;
         flex-direction: column;
     }
+
     .postText {
-        padding-top: 5px;
-        padding-bottom: 3px;
+        padding: 5px;
         font-weight: 400;
         font-size: 15px;
-        padding-left: 4px;
     }
+
     .postBottom {
         padding-top: 5px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
         padding-left: 4px;
     }
+
     .postBottomLeft {
+        padding-right: 10px;
         display: flex;
         align-items: center;
+
         &:hover {
             cursor: pointer;
         }
     }
+
     .likeIcon {
         font-size: 30px;
         padding-right: 5px;
         cursor: pointer;
     }
+
+    .commentIcon {
+        width: 22px;
+        height: 22px;
+        padding: 2px 5px 2px 2px;
+        cursor: pointer;
+    }
+
     .postLikeCounter {
         font-size: 15px;
     }
+
     .hrh {
         opacity: 0.4;
     }
+
     .TopbarMenu {
         position: absolute;
         top: 42px;
@@ -245,10 +339,78 @@ const PostContainer = styled.div`
         -webkit-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
         box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
     }
+
     .menuItems {
         margin: 7px;
         border-bottom: 1px solid #e1e1e1;
         color: black;
         cursor: pointer;
     }
+`;
+
+const ShowPostContainer = styled.div`
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .addComment {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    border: solid 1px #cecdcd;
+    @media (max-width: 655px) {
+      flex-direction: column;
+    }
+  }
+  .addCommentInput {
+    width: 70%;
+    border: none;
+    padding: 7px;
+    border-radius: 5px;
+    &:focus {
+      outline: none;
+    }
+    @media (max-width: 655px) {
+      width: 90%;
+    }
+  }
+  .addCommentButton {
+    border: none;
+    padding: 7px;
+    border-radius: 5px;
+    background-color: #4a4b4b;
+    color: white;
+    margin: 5px;
+  }
+  .showComments {
+    width: 100%;
+    margin-top: 10px;
+    height: 30vh;
+    overflow-y: scroll;
+    ::-webkit-scrollbar {
+      width: 3px;
+    }
+    ::-webkit-scrollbar-track {
+      background-color: #f1f1f1;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: rgb(192, 192, 192);
+    }
+  }
+  .oneComment {
+    display: flex;
+    margin-bottom: 5px;
+  }
+  .usernameAndCommentWrapper {
+    display: flex;
+    flex-direction: column;
+    margin-left: 5px;
+    padding: 5px;
+    border: solid 1px #cecdcd;
+    border-radius: 10px;
+    width: 100%;
+  }
+  .usernameComment {
+    font-weight: bold;
+  }
 `;

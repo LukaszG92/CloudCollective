@@ -5,7 +5,6 @@ import { AuthContext} from "../../context/auth-context";
 
 function Rightbar(props) {
     const [Followings, setFollowings] = useState([]);
-    const [unfollowed, setUnfollowed] = useState(false);
     const auth = useContext(AuthContext);
 
     useEffect(() => {
@@ -15,7 +14,7 @@ function Rightbar(props) {
             setFollowings(responseData.data.followings)
         };
         fetchUsers();
-    }, [unfollowed]);
+    }, []);
 
     return (
     <RightbarContainer>
@@ -24,9 +23,8 @@ function Rightbar(props) {
             <div className="rightbarFollowings">
                 {Followings.map((f) => (
                     <RightbarUser
+                        key = {f.username}
                         username = {f}
-                        unfollowed = {unfollowed}
-                        setUnfollowed = {setUnfollowed}
                     />
                 ))}
             </div>

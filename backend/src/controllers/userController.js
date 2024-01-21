@@ -124,14 +124,16 @@ exports.getUser = (req, res) => {
              'username': username
         }
     }).then(result => {
-        let user = result['dataValues']
-        res.status(200).send({
-            status: "success",
-            message: "user retrieved successfully",
-            data: {
-                user: user
-            },
-        });
+        if(result) {
+            let user = result['dataValues']
+            res.status(200).send({
+                status: "success",
+                message: "user retrieved successfully",
+                data: {
+                    user: user
+                },
+            });
+        }
     })
 }
 
