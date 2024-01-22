@@ -2,8 +2,8 @@ const ComputerVisionClient = require('@azure/cognitiveservices-computervision').
 const ApiKeyCredentials = require('@azure/ms-rest-js').ApiKeyCredentials;
 
 
-const key = '8a5e073b41944d03b0a65203e7abf3fd';
-const endpoint = 'https://cloud-collective-computervision.cognitiveservices.azure.com/';
+const key = process.env.CV_KEY
+const endpoint = process.env.CV_ENDPOINT
 
 
 const computerVisionClient = new ComputerVisionClient(
