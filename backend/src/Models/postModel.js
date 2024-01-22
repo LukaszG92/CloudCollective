@@ -15,7 +15,10 @@ const Post = sequelize.define('post', {
     },
     image: {
         type: DataTypes.STRING,
-        defaultValue: "https://cloudcollective.blob.core.windows.net/images/defaultpost.jpg"
+        allowNull: false
+    },
+    topic : {
+        type: DataTypes.STRING
     }
 }, {
     updatedAt: false

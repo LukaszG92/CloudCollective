@@ -1,8 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const session = require("express-session");
-const cookieParser = require("cookie-parser");
 
 const commentRouter = require('./src/routes/commentRoute');
 const postRouter = require('./src/routes/postRoute');

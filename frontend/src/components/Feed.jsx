@@ -11,7 +11,6 @@ function Feed(props) {
 
     useEffect(() => {
         const fetchPost = async () => {
-            console.log("Auth:"+auth.username)
             const response = await fetch('http://localhost:8000/api/posts/feed', {
                 headers: {
                     "Content-Type": "application/json",
@@ -19,7 +18,6 @@ function Feed(props) {
                 }
             });
             const responseData = await response.json();
-            console.log(responseData.data.posts);
             setPosts(responseData.data.posts)
         };
         fetchPost();

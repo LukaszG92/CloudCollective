@@ -1,178 +1,57 @@
-import React from "react";
+import React, {useContext, useEffect, useState} from "react";
 import styled from "styled-components";
 import Topbar from "../Topbar/Topbar";
-import {useLocation} from 'react-router-dom';
+import {AuthContext} from "../../context/auth-context";
+import Modal from "../UI/Modal";
+import Post from "../Post";
 
 function Explore() {
-    let location = useLocation();
-    console.log(location.state.username);
+
+    const auth = useContext( AuthContext)
+    const [posts, setPosts] = useState([]);
+    const [showPost, setShowPosts] = useState(false);
+    const [showPostData, setShowPostData] = useState({});
+
+    useEffect(() => {
+        const fetchPost = async () => {
+            const response = await fetch('http://localhost:8000/api/posts/explore', {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: auth.username,
+                }
+            });
+            const responseData = await response.json();
+            setPosts(responseData.data.posts)
+        };
+        fetchPost();
+    }, []);
+
     return(
     <>
         <Topbar/>
         <PostsContainer>
+            {showPost && (
+                <Modal onClose={() => setShowPosts(false)}>
+                    <Post
+                        post={showPostData}
+                    />
+                </Modal>
+            )}
             <div className="postsWrapper">
-                <div className="profilePostWrapper">
-                    <div className="profilePost">
-                        <img
-                            src={"http://localhost:3000/images/defaultpost.jpg"}
-                            alt=""
-                            className="profilePostImg"
-                        />
+                {posts.map( (post) => (
+                    <div className="profilePostWrapper" onClick={() =>{
+                        setShowPostData(post);
+                        setShowPosts(true);
+                    }}>
+                        <div className="profilePost">
+                            <img
+                                src={post.image}
+                                alt=""
+                                className="profilePostImg"
+                            />
+                        </div>
                     </div>
-                </div>
-                <div className="profilePostWrapper">
-                    <div className="profilePost">
-                        <img
-                            src={"http://localhost:3000/images/defaultpost.jpg"}
-                            alt=""
-                            className="profilePostImg"
-                        />
-                    </div>
-                </div>
-                <div className="profilePostWrapper">
-                    <div className="profilePost">
-                        <img
-                            src={"http://localhost:3000/images/defaultpost.jpg"}
-                            alt=""
-                            className="profilePostImg"
-                        />
-                    </div>
-                </div>
-                <div className="profilePostWrapper">
-                    <div className="profilePost">
-                        <img
-                            src={"http://localhost:3000/images/defaultpost.jpg"}
-                            alt=""
-                            className="profilePostImg"
-                        />
-                    </div>
-                </div>
-                <div className="profilePostWrapper">
-                    <div className="profilePost">
-                        <img
-                            src={"http://localhost:3000/images/defaultpost.jpg"}
-                            alt=""
-                            className="profilePostImg"
-                        />
-                    </div>
-                </div>
-                <div className="profilePostWrapper">
-                    <div className="profilePost">
-                        <img
-                            src={"http://localhost:3000/images/defaultpost.jpg"}
-                            alt=""
-                            className="profilePostImg"
-                        />
-                    </div>
-                </div>
-                <div className="profilePostWrapper">
-                    <div className="profilePost">
-                        <img
-                            src={"http://localhost:3000/images/defaultpost.jpg"}
-                            alt=""
-                            className="profilePostImg"
-                        />
-                    </div>
-                </div>
-                <div className="profilePostWrapper">
-                    <div className="profilePost">
-                        <img
-                            src={"http://localhost:3000/images/defaultpost.jpg"}
-                            alt=""
-                            className="profilePostImg"
-                        />
-                    </div>
-                </div>
-                <div className="profilePostWrapper">
-                    <div className="profilePost">
-                        <img
-                            src={"http://localhost:3000/images/defaultpost.jpg"}
-                            alt=""
-                            className="profilePostImg"
-                        />
-                    </div>
-                </div>
-                <div className="profilePostWrapper">
-                    <div className="profilePost">
-                        <img
-                            src={"http://localhost:3000/images/defaultpost.jpg"}
-                            alt=""
-                            className="profilePostImg"
-                        />
-                    </div>
-                </div>
-                <div className="profilePostWrapper">
-                    <div className="profilePost">
-                        <img
-                            src={"http://localhost:3000/images/defaultpost.jpg"}
-                            alt=""
-                            className="profilePostImg"
-                        />
-                    </div>
-                </div>
-                <div className="profilePostWrapper">
-                    <div className="profilePost">
-                        <img
-                            src={"http://localhost:3000/images/defaultpost.jpg"}
-                            alt=""
-                            className="profilePostImg"
-                        />
-                    </div>
-                </div>
-                <div className="profilePostWrapper">
-                    <div className="profilePost">
-                        <img
-                            src={"http://localhost:3000/images/defaultpost.jpg"}
-                            alt=""
-                            className="profilePostImg"
-                        />
-                    </div>
-                </div>
-                <div className="profilePostWrapper">
-                    <div className="profilePost">
-                        <img
-                            src={"http://localhost:3000/images/defaultpost.jpg"}
-                            alt=""
-                            className="profilePostImg"
-                        />
-                    </div>
-                </div>
-                <div className="profilePostWrapper">
-                    <div className="profilePost">
-                        <img
-                            src={"http://localhost:3000/images/defaultpost.jpg"}
-                            alt=""
-                            className="profilePostImg"
-                        />
-                    </div>
-                </div>
-                <div className="profilePostWrapper">
-                    <div className="profilePost">
-                        <img
-                            src={"http://localhost:3000/images/defaultpost.jpg"}
-                            alt=""
-                            className="profilePostImg"
-                        />
-                    </div>
-                </div>
-                <div className="profilePostWrapper">
-                    <div className="profilePost">
-                        <img
-                            src={"http://localhost:3000/images/defaultpost.jpg"}
-                            alt=""
-                            className="profilePostImg"
-                        />
-                    </div>
-                </div>
-                <div className="profilePostWrapper">
-                    <div className="profilePost">
-                        <img
-                            src={"http://localhost:3000/images/defaultpost.jpg"}
-                            alt=""
-                            className="profilePostImg"
-                        />
-                    </div>
-                </div>
+                ))}
             </div>
         </PostsContainer>
     </>
@@ -206,9 +85,9 @@ const PostsContainer = styled.div`
         justify-content: center;
     }
     .profilePostImg {
-        width: 100%;
-        height: 100%;
-        object-fit: fill;
+        max-height: 100%;
+        max-width: 100%;
+        margin: auto;
         display: block;
     }
 `;

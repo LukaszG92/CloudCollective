@@ -274,9 +274,10 @@ const PostContainer = styled.div`
     }
 
     .postImg {
-        padding-top: 5px;
-        width: 100%;
-        object-fit: contain;
+        max-height: 450px;
+        max-width: 450px;
+        margin: auto;
+        display: block;
     }
 
     .postCenter {
