@@ -1,19 +1,22 @@
-import { useState } from 'react';
-import { Link, useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import {useContext, useState} from 'react'
+import { Link, useNavigate } from "react-router-dom"
+import styled from "styled-components"
+import {AuthContext} from "../../context/auth-context"
 
 function Signup() {
-    const navigate = useNavigate();
-    const [nome, setNome] = useState('');
-    const [cognome, setCognome] = useState('');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
+
+    const auth = useContext( AuthContext)
+    const navigate = useNavigate()
+    const [nome, setNome] = useState('')
+    const [cognome, setCognome] = useState('')
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [email, setEmail] = useState('')
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
         if (!(nome === '' || email === '' || password === '')) {
-            fetch('http://localhost:8000/api/users/signup', {
+            let response = await fetch('http://localhost:8000/api/users/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -26,8 +29,11 @@ function Signup() {
                     email
                 })
             })
+            let responseData = await response.json()
+            console.log(responseData.status)
+            auth.login(responseData.data.user.username)
         }
-    };
+    }
 
     return (
         <SignupContainer>
@@ -38,11 +44,11 @@ function Signup() {
                             <span className="signupRightTopLogo">instagram</span>
                         </div>
                         <div className="signupRightTopForm">
-                            <form action="frontend/src/components/pages/Signup.jsx" className="signupBox" onSubmit={handleSubmit}>
+                            <form action="frontend/src/components/pages/Signup.jsx" className="signupBox">
 
                                 <input
                                     onChange={(e) => {
-                                        setNome(e.target.value);
+                                        setNome(e.target.value)
                                     }}
                                     placeholder="Nome"
                                     type = "text"
@@ -51,7 +57,7 @@ function Signup() {
                                 />
                                 <input
                                     onChange={(e) => {
-                                        setCognome(e.target.value);
+                                        setCognome(e.target.value)
                                     }}
                                     placeholder="Cognome"
                                     type = "text"
@@ -60,7 +66,7 @@ function Signup() {
                                 />
                                 <input
                                     onChange={(e) => {
-                                        setUsername(e.target.value);
+                                        setUsername(e.target.value)
                                     }}
                                     placeholder="Username"
                                     type = "text"
@@ -69,7 +75,7 @@ function Signup() {
                                 />
                                 <input
                                     onChange={(e) => {
-                                        setEmail(e.target.value);
+                                        setEmail(e.target.value)
                                     }}
                                     placeholder="Email"
                                     type = "email"
@@ -78,7 +84,7 @@ function Signup() {
                                 />
                                 <input
                                     onChange={(e) => {
-                                        setPassword(e.target.value);
+                                        setPassword(e.target.value)
                                     }}
                                     placeholder="Password"
                                     type = "password"
@@ -86,8 +92,7 @@ function Signup() {
                                     className="signupInput"
                                 />
 
-                                <button className="signupButton" onClick={() => {
-                                    navigate(`/`);}}>
+                                <button className="signupButton" onClick={handleSubmit}>
                                     Submit</button>
                             </form>
                         </div>
@@ -99,7 +104,7 @@ function Signup() {
                             <span
                                 className="SignUptext"
                                 onClick={() => {
-                                    navigate("/login");
+                                    navigate("/login")
                                 }}>
                                 Log in
                             </span>
@@ -109,7 +114,7 @@ function Signup() {
                 </div>
             </div>
         </SignupContainer>
-    );
+    )
 }
 
 const SignupContainer = styled.div`
@@ -198,4 +203,4 @@ const SignupContainer = styled.div`
     }
 `;
 
-export default Signup;
+export default Signup

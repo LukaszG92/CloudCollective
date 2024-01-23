@@ -17,7 +17,7 @@ function Feed(props) {
                     Authorization: auth.username,
                 }
             });
-            const responseData = await response.json();
+            const responseData = await response.json()
             setPosts(responseData.data.posts)
         };
         fetchPost();

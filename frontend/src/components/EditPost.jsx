@@ -20,9 +20,7 @@ function EditPost(props) {
             })
         });
         let responseData = await response.json();
-        console.log(responseData.data.post)
-        props.onClose();
-        props.setPost(responseData.data.post)
+        props.onClose(responseData.data.post);
     }
 
     return (

@@ -16,17 +16,9 @@ const app = express();
 Comment.belongsTo(User, {as: 'author'})
 Comment.belongsTo(Post)
 Post.belongsTo(User, {as: 'creator'})
-User.belongsToMany(Post, {
-    through: sequelize.define(
-        'Likes',
-        {},
-        {
-            timestamps:false
-        }),
-    foreignKey: 'userLike'
-});
+User.belongsToMany(Post, { through: sequelize.define('Likes', {}, { timestamps:false }), foreignKey: 'userLike' });
 
-sequelize.sync({alter:true});
+sequelize.sync();
 
 app.use(cors());
 app.use(bodyParser.json());

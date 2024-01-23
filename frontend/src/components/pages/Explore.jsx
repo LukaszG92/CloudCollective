@@ -21,6 +21,7 @@ function Explore() {
                 }
             });
             const responseData = await response.json();
+            console.log(responseData.data.posts)
             setPosts(responseData.data.posts)
         };
         fetchPost();
@@ -39,7 +40,7 @@ function Explore() {
             )}
             <div className="postsWrapper">
                 {posts.map( (post) => (
-                    <div className="profilePostWrapper" onClick={() =>{
+                    <div key={post.id} className="profilePostWrapper" onClick={() =>{
                         setShowPostData(post);
                         setShowPosts(true);
                     }}>

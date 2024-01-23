@@ -41,9 +41,7 @@ function Topbar() {
         } else {
             setshowSearch(true);
             let response = await fetch("http://localhost:8000/api/users/search/"+e.target.value)
-            console.log(response)
             let responseData = await response.json();
-            console.log(responseData)
             setusersSearch(responseData.data.users);
         }
     };

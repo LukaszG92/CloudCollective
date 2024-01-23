@@ -7,186 +7,310 @@ const computerVision = require('../utils/imageClassifier');
 const {Op} = require("sequelize");
 
 
-exports.createPost = (req, res) => {
-    let url = req.file.url.slice(0, req.file.url.indexOf('?'));
+exports.createPost = async (req, res) => {
+    let url = req.file.url.slice(0, req.file.url.indexOf('?'))
+    let description = req.body.description
+    let creatorUsername = req.headers.authorization
+
+    let topic = ""
     if(req.file.blobSize < 4000000) {
-        computerVision(req.file.url).then(topic => {
-            Post.create({
-                'image': url,
-                'description': req.body.description,
-                'creatorUsername': req.headers.authorization,
-                'topic': topic
-            }).then(result => {
-                let post = result['dataValues'];
-                res.status(200).send({
-                    status: "success",
-                    message: "Post created successfully",
-                    data: {
-                        post: post
-                    },
-                })
-            }).catch(err => {
-                console.log(err)
+        try {
+            topic = await computerVision(req.file.url)
+        } catch (err) {
+            return res.status(500).send({
+                status: "failure",
+                message: "Cannot create a post now, try again."
             })
-        })
-    } else {
-        Post.create({
+        }
+    }
+
+    let post
+    try {
+        post = await Post.create({
             'image': url,
-            'description': req.body.description,
-            'creatorUsername': req.headers.authorization,
-        }).then(result => {
-            let post = result['dataValues'];
-            res.status(200).send({
-                status: "success",
-                message: "Post created successfully",
-                data: {
-                    post: post
-                },
-            })
-        }).catch(err => {
-            console.log(err)
+            'description': description,
+            'creatorUsername': creatorUsername,
+            'topic': topic
+        })
+    } catch (err) {
+        return res.status(500).send({
+            status: "failure",
+            message: "Cannot create a post now, try again."
         })
     }
-}
 
-exports.updatePost = (req, res) => {
-    let postId = req.params.post;
-    Post.findOne({where : {
-        'id' : postId
-        }
-    }).then(post => {
-        post.update({'description': req.body.description})
-            .then(result => {
-                let post = result['dataValues']
-                res.status(200).send({
-                    status: "success",
-                    message: "Post updated successfully",
-                    data: {
-                        post: post
-                    },
-                })
-            }).catch(err => {
-            console.log(err)
-        })
+    res.status(200).send({
+        status: "success",
+        message: "Post created successfully",
+        data: {
+            post: post
+        },
     })
 }
 
-exports.deletePost = (req, res) => {
-    let postId = req.params.post;
-    Post.destroy({where: {
-        'id' : postId
-        }
-    }).then(result => {
-        res.status(200).send({
-            status: "success",
-            message: "Post deleted successfully",
+exports.updatePost = async (req, res) => {
+    let postId = req.params.post
+    let description = req.body.description
+
+    let post
+    try {
+        post = await Post.findOne({
+            where: {
+                'id': postId
+            }
         })
-    }).catch(err => {
-        console.log(err)
+    } catch (err) {
+        return res.status(500).send({
+            status: "failure",
+            message: "Cannot update the post now, try again."
+        })
+    }
+
+    let updatedPost
+    try {
+        updatedPost = post.update({
+            'description': description
+        })
+    } catch (err) {
+        return res.status(500).send({
+            status: "failure",
+            message: "Cannot update the post now, try again."
+        })
+    }
+
+    res.status(200).send({
+        status: "success",
+        message: "Post updated successfully.",
+        data: {
+            post: updatedPost
+        },
     })
 }
 
-exports.findPost = (req, res) => {
+exports.deletePost = async (req, res) => {
     let postId = req.params.post;
-    Post.findOne({where : {
-            'id' : postId
-        }
-    }).then(result => {
-        let post = result['dataValues']
+
+    let post
+    try {
+        post = await Post.findOne({where: {
+                'id' : postId
+            }
+        })
+    } catch(err) {
+        return res.status(500).send({
+            status: "failure",
+            message: "Cannot delete the post now, try again."
+        })
+    }
+
+    if(!post) {
+        return res.status(500).send({
+            status: "failure",
+            message: "Cannot delete the post now, try again."
+        })
+    }
+
+    try{
+        post.destroy()
+    } catch(err) {
+        return res.status(500).send({
+            status: "failure",
+            message: "Cannot delete the post now, try again."
+        })
+    }
+
+    res.status(200).send({
+        status: "success",
+        message: "Post deleted successfully.",
+    })
+}
+
+exports.findPost = async (req, res) => {
+    let postId = req.params.post
+
+    let post
+    try {
+        post = await Post.findOne({
+            where: {
+                'id': postId
+            }
+        })
+    } catch(err) {
+        return res.status(500).send({
+            status: "failure",
+            message: "Cannot find the post now, try again."
+        })
+    }
+
+    try{
         post['image'] = blobStorage(post['image'])
-        res.status(200).send({
+    } catch(err) {
+        return res.status(500).send({
+            status: "failure",
+            message: "Cannot find the post now, try again."
+        })
+    }
+
+    res.status(200).send({
+        status: "success",
+        message: "Post retrieved successfully",
+        data: {
+            post: post
+        },
+    })
+}
+
+exports.feed = async (req, res) => {
+    let userUsername = req.headers.authorization;
+
+    let followings
+    try {
+        followings = await Follow.findAll({
+            where: {
+                'follower' : userUsername
+            }
+        })
+    } catch (err){
+        return res.status(500).send({
+            status: "failure",
+            message: "Cannot get the feed now, try again."
+        })
+    }
+
+    if(!followings.length){
+        return res.status(200).send({
             status: "success",
-            message: "Post retrieved successfully",
+            message: "Feed retrieved successfully.",
             data: {
-                post: post
+                posts: []
             },
         })
-    }).catch(err => {
-        console.log(err)
-    })
-}
+    }
 
-exports.feed = (req, res) => {
-    let userUsername = req.headers.authorization;
-    Follow.findAll({where: {
-        'follower' : userUsername
-        }
-    }).then(results => {
-        let followings = [];
-        results.forEach(following => {
-            followings.push({'creatorUsername': following['dataValues']['following']})
-        })
-        Post.findAll({
-            where:{
-                [Op.or]: followings
+    let followingsUsername = []
+    followings.forEach( (following) => {
+        followingsUsername.push(following['following'])
+    })
+
+    let posts
+    try {
+        posts = await Post.findAll({
+            where: {
+                'creatorUsername': { [Op.or]: followingsUsername }
             },
             order: [
                 ['id', 'DESC']
             ]
-        }).then(result => {
-            let posts = [];
-            result.forEach(post => {
-                post['dataValues']['image'] = blobStorage(post['dataValues']['image'])
-                posts.push(post['dataValues'])
-            })
-            res.status(200).send({
-                status: "success",
-                message: "feed retrieved successfully",
-                data: {
-                    posts: posts
-                },
-            });
-        }).catch(err => {
-            console.log(err)
         })
+    } catch (err){
+        console.log(err)
+        return res.status(500).send({
+            status: "failure",
+            message: "Cannot get the feed now, try again."
+        })
+    }
+
+    posts.forEach( (post) => {
+        try {
+            post.image = blobStorage(post.image)
+        } catch (err){
+            return res.status(500).send({
+                status: "failure",
+                message: "Cannot get the explore now, try again."
+            })
+        }
+    })
+
+    res.status(200).send({
+        status: "success",
+        message: "Feed retrieved successfully.",
+        data: {
+            posts: posts
+        },
     })
 }
 
-exports.explore = (req, res) => {
+exports.explore = async (req, res) => {
     let userUsername = req.headers.authorization;
-    User.findOne({where: {
-            'username' : userUsername
-        }
-    }).then(user => {
-        let interests = [user['dataValues']['interest1'], user['dataValues']['interest2'], user['dataValues']['interest3']];
-        sequelize.query(`SELECT * FROM likes WHERE userLike = '${userUsername}'`).then( results => {
-            let likedPosts = []
-            results[0].forEach(result => {
-                likedPosts.push(result['postId']);
-            })
-            Post.findAll({
-                where: {
-                    topic: {
-                        [Op.or]: interests
-                    },
-                    creatorUsername: {
-                        [Op.not]: userUsername
-                    },
-                    id: {
-                        [Op.not]: likedPosts
-                    }
-                },
-                order: [
-                    ['id', 'DESC']
-                ]
-            }).then(result => {
-                let posts = [];
-                result.forEach(post => {
-                    post['dataValues']['image'] = blobStorage(post['dataValues']['image'])
-                    posts.push(post['dataValues'])
-                })
-                res.status(200).send({
-                    status: "success",
-                    message: "explore retrieved successfully",
-                    data: {
-                        posts: posts
-                    },
-                });
-            }).catch(err => {
-                console.log(err)
-            })
+
+    let user
+    try {
+        user = await User.findOne({
+            where: {
+                'username': userUsername
+            }
         })
+    } catch (err){
+        return res.status(500).send({
+            status: "failure",
+            message: "Cannot get the explore now, try again."
+        })
+    }
+
+    let interests = [user.interest1, user.interest2, user.interest3]
+
+    let likedPosts
+    try {
+        likedPosts = await sequelize.query(
+            `SELECT postId
+             FROM likes
+             WHERE userLike = '${userUsername}'`)
+    } catch (err){
+        return res.status(500).send({
+            status: "failure",
+            message: "Cannot get the explore now, try again."
+        })
+    }
+
+    let likedIds = []
+    likedPosts[0].forEach( (likedPost) => {
+        likedIds.push(likedPost.postId)
     })
+
+    let explorePosts
+    try {
+        explorePosts = await Post.findAll({
+            where: {
+                topic: {
+                    [Op.or]: interests
+                },
+                creatorUsername: {
+                    [Op.not]: userUsername
+                },
+                id: {
+                    [Op.not]: likedIds
+                }
+            },
+            order: [
+                ['id', 'DESC']
+            ]
+        })
+    } catch (err){
+        return res.status(500).send({
+            status: "failure",
+            message: "Cannot get the explore now, try again."
+        })
+    }
+
+    explorePosts.forEach( (post) => {
+        try {
+            post.image = blobStorage(post.image)
+            console.log(post.image)
+        } catch (err){
+            return res.status(500).send({
+                status: "failure",
+                message: "Cannot get the explore now, try again."
+            })
+        }
+    })
+
+    res.status(200).send({
+        status: "success",
+        message: "explore retrieved successfully",
+        data: {
+            posts: explorePosts
+        },
+    });
 }
 
 exports.getUserPost = (req, res) => {

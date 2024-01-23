@@ -20,7 +20,6 @@ function ProfilePost(props) {
         const fetchPost = async () => {
             const response = await fetch('http://localhost:8000/api/posts/p/'+props.postId);
             const responseData = await response.json();
-            console.log(responseData.data.post)
             setPost(responseData.data.post)
         };
         fetchPost();

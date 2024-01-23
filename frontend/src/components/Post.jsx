@@ -24,7 +24,6 @@ export default function Post( props ) {
     const [profilePic, setProfilePic] = useState("");
 
     const addCommentHandler = async () => {
-        console.log(commentInput)
         let response = await fetch("http://localhost:8000/api/comments/"+post.id+"/new", {
             method: 'POST',
             headers: {
@@ -36,6 +35,12 @@ export default function Post( props ) {
             })
         })
         setShowPost(!showPost);
+    }
+
+    const closeHandler = (updatedPost) => {
+        setShowEditPost(false)
+        setShowMenu(false)
+        window.location.reload()
     }
 
     const likeHandler = async () => {
@@ -62,13 +67,12 @@ export default function Post( props ) {
             setProfilePic(responseData.data.user.profilePic)
         };
         fetchProfilePic();
-    }, [post.creatorUsername]);
+    }, []);
 
     useEffect(() => {
         const fetchPostLikes = async () => {
             let response = await fetch('http://localhost:8000/api/posts/' + post.id + '/likes');
             let responseData = await response.json();
-            console.log(responseData.data.likes);
             setLikes(responseData.data.likes);
         }
         fetchPostLikes();
@@ -85,7 +89,6 @@ export default function Post( props ) {
         const fetchComments = async () => {
             let response = await fetch(`http://localhost:8000/api/comments/${post.id}`)
             let responseData = await response.json();
-            console.log(responseData)
             setComments(responseData.data.comments);
         }
         fetchComments()
@@ -94,18 +97,9 @@ export default function Post( props ) {
     return (
         <PostContainer>
             {showEditPost && (
-                <Modal onClose={()=>{
-                    setShowEditPost(false)
-                    setShowMenu(false)
-                    }
-                }>
-                    <EditPost onClose={()=>{
-                        setShowEditPost(false)
-                        setShowMenu(false)
-                        }
-                    }
-                                 setPost={setPost}
-                                 post={post}/>
+                <Modal onClose={closeHandler}>
+                    <EditPost onClose={closeHandler}
+                              post={post} />
                 </Modal>
             )}
             {showPost && (
@@ -153,7 +147,6 @@ export default function Post( props ) {
                     <span className="postUsername">{post.creatorUsername}</span>
                 </div>
                 <div className="postTopright">
-                    <span className="postDate"> {formatDistance(post.createdAt, new Date())} ago</span>
                     {(post.creatorUsername === auth.username) &&
                         <FiMoreVertical
                             onClick={() => {

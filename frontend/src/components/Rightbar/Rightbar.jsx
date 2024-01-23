@@ -23,7 +23,7 @@ function Rightbar(props) {
             <div className="rightbarFollowings">
                 {Followings.map((f) => (
                     <RightbarUser
-                        key = {f.username}
+                        key={f}
                         username = {f}
                     />
                 ))}

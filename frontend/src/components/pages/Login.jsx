@@ -46,9 +46,7 @@ function Login() {
             })
         })
         let responseData = await response.json();
-        console.log(responseData.data.username);
         auth.login(responseData.data.username);
-        console.log(auth.username)
         navigate("/");
     };
 

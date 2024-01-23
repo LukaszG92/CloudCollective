@@ -7,9 +7,11 @@ import { useParams } from "react-router-dom";
 import ProfilePost from "../ProfilePost";
 import {AuthContext} from "../../context/auth-context";
 
-function Profile(props) {
+function Profile() {
     const auth = useContext(AuthContext)
     const username = useParams().username;
+
+    const [editedProfile, setEditedProfile] = useState(false);
     const [buttonText, setButtonText] = useState("");
     const [posts, setPosts] = useState([])
     const [userData, setUserData] = useState({});
@@ -18,10 +20,12 @@ function Profile(props) {
     const [showEditProfile, setshowEditProfile] = useState(false);
 
     const hideEditProfileHandler = () => {
+        setEditedProfile(true);
         setshowEditProfile(false);
     };
     const showEditProfileHandler = (e) => {
         e.preventDefault();
+        setEditedProfile(false);
         setshowEditProfile(true);
     };
 
@@ -36,6 +40,8 @@ function Profile(props) {
                 user: auth.username,
             })
         });
+        let responseData = await response.json()
+        console.log(responseData)
         setButtonText(buttonText==="Unfollow"? "Follow" : "Unfollow")
     }
 
@@ -49,7 +55,6 @@ function Profile(props) {
         const fetchPost = async () => {
             const response = await fetch('http://localhost:8000/api/posts/u/'+username);
             const responseData = await response.json();
-            console.log(responseData.data.posts)
             setPosts(responseData.data.posts)
         };
         fetchPost();
@@ -64,20 +69,21 @@ function Profile(props) {
             const responseData = await response.json();
             console.log(responseData.data.followers)
             setFollower(responseData.data.followers)
+            console.log(auth.username)
+            console.log(responseData.data.followers.includes(auth.username))
             if(responseData.data.followers.includes(auth.username))
                 setButtonText("Unfollow");
             else
                 setButtonText("Follow");
         };
         fetchFollower();
-    }, [username, buttonText]);
+    }, [username, editedProfile, buttonText]);
 
     return (
         <>
             {showEditProfile && (
                 <Modal onClose={hideEditProfileHandler}>
                     <EditProfile onClose={hideEditProfileHandler}
-                                 setUserData={setUserData}
                                  user={userData}/>
                 </Modal>
             )}

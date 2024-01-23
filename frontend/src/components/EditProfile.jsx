@@ -37,23 +37,24 @@ function EditProfile(props) {
 
     const editProfileHandler = async (e) => {
         e.preventDefault();
+        let formData = new FormData()
+        formData.append('nome', nome)
+        formData.append('cognome', cognome)
+        formData.append('bio', bio)
+        formData.append('mail', mail)
+        formData.append('profilePic', profilePic)
+        if(file)
+            formData.append('image', file)
         const response = await fetch('http://localhost:8000/api/users/update', {
-            method: 'PUT',
+            method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 Authorization: auth.username,
             },
-            body: JSON.stringify({
-                nome,
-                cognome,
-                bio,
-                mail,
-                profilePic
-            })
+            body:
+                formData
         });
-        let responseData = await response.json();
-        props.onClose();
-        props.setUserData(responseData.data.user)
+        if(response.status === 200)
+            props.onClose();
     }
 
     return (
@@ -61,15 +62,17 @@ function EditProfile(props) {
             <div className="editProfileWrapper">
                 <div className="editProfileLeft">
                     <label className="fileupload" htmlFor="file">
-                        <img
-                          src={previewUrl ? previewUrl : profilePic }
-                          alt=""
-                          className="editProfileLeftImg"
-                        />
+                        <div className="imgWrapper">
+                            <img
+                                src={previewUrl ? previewUrl : profilePic}
+                                alt=""
+                                className="editProfileLeftImg"
+                            />
+                        </div>
                         <span className="shareOptionText">Choose Picture</span>
                         <input
-                          style={{ display: "none" }}
-                          type="file"
+                            style={{display: "none"}}
+                            type="file"
                           id="file"
                           accept=".png,.jpeg,.jpg"
                           onChange={pickedHandler}
@@ -144,12 +147,11 @@ const EditProfileContainer = styled.div`
     padding: 9px;
 
     .editProfileLeftImg {
-        width: 150px;
-        height: 150px;
+        max-height: 150px;
+        max-width: 150px;
+        margin: auto;
         display: block;
-        border-radius: 50%;
     }
-
     .editProfileWrapper {
         display: flex;
         align-items: center;

@@ -16,9 +16,7 @@ async function computerVision(url) {
         });
     if(!response.categories.length)
         return ""
-    let trimmed = response.categories[0].name.slice(0, response.categories[0].name.indexOf('_'));
-    console.log(trimmed)
-    return trimmed
+    return response.categories[0].name.slice(0, response.categories[0].name.indexOf('_'));
 }
 
 module.exports = computerVision

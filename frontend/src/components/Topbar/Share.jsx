@@ -2,7 +2,6 @@ import {useContext, useState, useRef, useEffect} from "react";
 import styled from "styled-components";
 import { MdPermMedia } from "react-icons/md";
 import {AuthContext} from "../../context/auth-context";
-import {ContainerClient} from "@azure/storage-blob";
 
 function Share(props) {
     const auth = useContext(AuthContext);
@@ -27,7 +26,6 @@ function Share(props) {
     const shareHandler = async e => {
         e.preventDefault();
         let formData = new FormData();
-        console.log(file)
         formData.append('image', file);
         formData.append("description", description);
         let response = await fetch('http://localhost:8000/api/posts/new', {
@@ -38,7 +36,6 @@ function Share(props) {
             body: formData,
         })
         let responseData = await response.json();
-        console.log(responseData)
     }
 
     const pickedHandler = event => {
