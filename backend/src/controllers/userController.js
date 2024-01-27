@@ -5,6 +5,13 @@ const bcrypt = require('bcryptjs');
 const blobStorage = require('../utils/blobStorage');
 
 exports.signup = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).send({
+            status: "failure",
+            message: errors.message
+        })
+    }
     let {nome, cognome, username, password, email} = req.body;
 
     let existingUser;
@@ -23,7 +30,7 @@ exports.signup = async (req, res) => {
     }
 
     if(existingUser)
-        return res.status(500).send({
+        return res.status(403).send({
             status: "failure",
             message: "User already exists."
         })
