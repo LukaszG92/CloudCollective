@@ -1,35 +1,35 @@
-import {useContext, useState, useRef, useEffect} from "react";
-import styled from "styled-components";
-import { MdPermMedia } from "react-icons/md";
-import {AuthContext} from "../../context/auth-context";
-import {NotificationManager} from "react-notifications";
-import NotificationContainer from "react-notifications/lib/NotificationContainer";
+import {useContext, useState, useRef, useEffect} from "react"
+import styled from "styled-components"
+import { MdPermMedia } from "react-icons/md"
+import {AuthContext} from "../../context/auth-context"
+import {NotificationManager} from "react-notifications"
+import NotificationContainer from "react-notifications/lib/NotificationContainer"
 
 function Share(props) {
-    const auth = useContext(AuthContext);
-    const [file, setFile] = useState(null);
-    const [description, setDescription] = useState("");
-    const [previewUrl, setPreviewUrl] = useState("");
+    const auth = useContext(AuthContext)
+    const [file, setFile] = useState(null)
+    const [description, setDescription] = useState("")
+    const [previewUrl, setPreviewUrl] = useState("")
 
-    const filePickerRef = useRef();
+    const filePickerRef = useRef()
 
     useEffect(() => {
         if (!file) {
-            return;
+            return
         }
-        const fileReader = new FileReader();
+        const fileReader = new FileReader()
         fileReader.onload = () => {
-            setPreviewUrl(fileReader.result);
-        };
-        fileReader.readAsDataURL(file);
-    }, [file]);
+            setPreviewUrl(fileReader.result)
+        }
+        fileReader.readAsDataURL(file)
+    }, [file])
 
 
     const shareHandler = async e => {
-        e.preventDefault();
-        let formData = new FormData();
-        formData.append('image', file);
-        formData.append("description", description);
+        e.preventDefault()
+        let formData = new FormData()
+        formData.append('image', file)
+        formData.append("description", description)
         let response = await fetch('http://localhost:8000/api/posts/new', {
             method:'POST',
             headers: {
@@ -37,7 +37,7 @@ function Share(props) {
             },
             body: formData,
         })
-        let responseData = await response.json();
+        let responseData = await response.json()
         if(response.status === 200)
             props.hideAddPostHandler()
         if(response.status === 422)
@@ -47,12 +47,12 @@ function Share(props) {
     }
 
     const pickedHandler = event => {
-        let pickedFile;
+        let pickedFile
         if (event.target.files && event.target.files.length === 1) {
-            pickedFile = event.target.files[0];
-            setFile(pickedFile);
+            pickedFile = event.target.files[0]
+            setFile(pickedFile)
         }
-    };
+    }
 
     return (
         <ShareContainer>
@@ -68,7 +68,7 @@ function Share(props) {
                 <form className="shareBottom" onSubmit={shareHandler} noValidate={true}>
                     <input
                         onChange={(e) => {
-                            setDescription(e.target.value);
+                            setDescription(e.target.value)
                         }}
                         value={description}
                         required
@@ -95,7 +95,7 @@ function Share(props) {
                 </form>
             </div>
         </ShareContainer>
-    );
+    )
 }
 
 const ShareContainer = styled.div`
@@ -170,6 +170,6 @@ const ShareContainer = styled.div`
     cursor: pointer;
     color: white;
   }
-`;
+`
 
-export default Share;
+export default Share

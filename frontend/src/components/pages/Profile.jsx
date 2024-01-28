@@ -1,36 +1,37 @@
-import React, {useContext, useEffect, useState} from "react";
-import styled from "styled-components";
-import Topbar from "../Topbar/Topbar";
-import EditProfile from "../EditProfile";
-import Modal from "../UI/Modal";
-import { useParams } from "react-router-dom";
-import ProfilePost from "../ProfilePost";
-import {AuthContext} from "../../context/auth-context";
+import React, {useContext, useEffect, useState} from "react"
+import styled from "styled-components"
+import Topbar from "../Topbar/Topbar"
+import EditProfile from "../EditProfile"
+import Modal from "../UI/Modal"
+import { useParams } from "react-router-dom"
+import ProfilePost from "../ProfilePost"
+import {AuthContext} from "../../context/auth-context"
+import {NotificationManager} from "react-notifications"
 
 function Profile() {
     const auth = useContext(AuthContext)
-    const username = useParams().username;
+    const username = useParams().username
 
-    const [editedProfile, setEditedProfile] = useState(false);
-    const [buttonText, setButtonText] = useState("");
+    const [editedProfile, setEditedProfile] = useState(false)
+    const [buttonText, setButtonText] = useState("")
     const [posts, setPosts] = useState([])
-    const [userData, setUserData] = useState({});
-    const [follower, setFollower] = useState([]);
-    const [following, setFollowing] = useState([]);
-    const [showEditProfile, setshowEditProfile] = useState(false);
+    const [userData, setUserData] = useState({})
+    const [follower, setFollower] = useState([])
+    const [following, setFollowing] = useState([])
+    const [showEditProfile, setshowEditProfile] = useState(false)
 
     const hideEditProfileHandler = () => {
-        setEditedProfile(true);
-        setshowEditProfile(false);
-    };
+        setEditedProfile(true)
+        setshowEditProfile(false)
+    }
     const showEditProfileHandler = (e) => {
-        e.preventDefault();
-        setEditedProfile(false);
-        setshowEditProfile(true);
-    };
+        e.preventDefault()
+        setEditedProfile(false)
+        setshowEditProfile(true)
+    }
 
     const followHandler = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
         let response = await fetch("http://localhost:8000/api/users/follow/" + userData.username, {
             method: 'POST',
             headers: {
@@ -39,45 +40,59 @@ function Profile() {
             body: JSON.stringify({
                 user: auth.username,
             })
-        });
+        })
         let responseData = await response.json()
-        console.log(responseData)
-        setButtonText(buttonText==="Unfollow"? "Follow" : "Unfollow")
+        if(response.status === 200)
+            setButtonText(buttonText==="Unfollow"? "Follow" : "Unfollow")
+        if(response.status === 500)
+            NotificationManager.error(responseData.message, 'Internal server error.', 2000)
+
     }
 
     useEffect(() => {
         const fetchUserData = async () => {
-            const response = await fetch('http://localhost:8000/api/users/u/'+username);
-            const responseData = await response.json();
-            setUserData(responseData.data.user);
-        };
-        fetchUserData();
+            const response = await fetch('http://localhost:8000/api/users/u/'+username)
+            const responseData = await response.json()
+            if(response.status === 200)
+                setUserData(responseData.data.user)
+            if(response.status === 500)
+                NotificationManager.error(responseData.message, 'Internal server error.', 2000)
+        }
+        fetchUserData()
         const fetchPost = async () => {
-            const response = await fetch('http://localhost:8000/api/posts/u/'+username);
-            const responseData = await response.json();
-            setPosts(responseData.data.posts)
-        };
-        fetchPost();
+            const response = await fetch('http://localhost:8000/api/posts/u/'+username)
+            const responseData = await response.json()
+            if(response.status === 200)
+                setPosts(responseData.data.posts)
+            if(response.status === 500)
+                NotificationManager.error(responseData.message, 'Internal server error.', 2000)
+        }
+        fetchPost()
         const fetchFollowing = async () => {
-            const response = await fetch('http://localhost:8000/api/users/'+username+'/followings');
-            const responseData = await response.json();
-            setFollowing(responseData.data.followings)
-        };
-        fetchFollowing();
+            const response = await fetch('http://localhost:8000/api/users/'+username+'/followings')
+            const responseData = await response.json()
+            if(response.status === 200)
+                setFollowing(responseData.data.followings)
+            if(response.status === 500)
+                NotificationManager.error(responseData.message, 'Internal server error.', 2000)
+        }
+        fetchFollowing()
         const fetchFollower = async () => {
-            const response = await fetch('http://localhost:8000/api/users/'+username+'/followers');
-            const responseData = await response.json();
-            console.log(responseData.data.followers)
-            setFollower(responseData.data.followers)
-            console.log(auth.username)
-            console.log(responseData.data.followers.includes(auth.username))
-            if(responseData.data.followers.includes(auth.username))
-                setButtonText("Unfollow");
-            else
-                setButtonText("Follow");
-        };
-        fetchFollower();
-    }, [username, editedProfile, buttonText]);
+            const response = await fetch('http://localhost:8000/api/users/'+username+'/followers')
+            const responseData = await response.json()
+            if(response.status === 200) {
+                setFollower(responseData.data.followers)
+                if(responseData.data.followers.includes(auth.username))
+                    setButtonText("Unfollow")
+                else
+                    setButtonText("Follow")
+            }
+            if(response.status === 500)
+                NotificationManager.error(responseData.message, 'Internal server error.', 2000)
+
+        }
+        fetchFollower()
+    }, [username, editedProfile, buttonText])
 
     return (
         <>
@@ -146,7 +161,7 @@ function Profile() {
                 </div>
             </ProfilePosts>
         </>
-    );
+    )
 }
 
 const ProfileContainer = styled.div`
@@ -304,5 +319,6 @@ const ProfilePosts = styled.div`
         margin: auto;
         display: block;
     }
-`;
-export default Profile;
+`
+
+export default Profile

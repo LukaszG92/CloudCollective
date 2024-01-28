@@ -1,16 +1,16 @@
-import React, {useContext, useEffect, useState} from "react";
-import styled from "styled-components";
-import Topbar from "../Topbar/Topbar";
-import {AuthContext} from "../../context/auth-context";
-import Modal from "../UI/Modal";
-import Post from "../Post";
+import React, {useContext, useEffect, useState} from "react"
+import styled from "styled-components"
+import Topbar from "../Topbar/Topbar"
+import {AuthContext} from "../../context/auth-context"
+import Modal from "../UI/Modal"
+import Post from "../Post"
+import {NotificationManager} from "react-notifications"
 
 function Explore() {
-
     const auth = useContext( AuthContext)
-    const [posts, setPosts] = useState([]);
-    const [showPost, setShowPosts] = useState(false);
-    const [showPostData, setShowPostData] = useState({});
+    const [posts, setPosts] = useState([])
+    const [showPost, setShowPosts] = useState(false)
+    const [showPostData, setShowPostData] = useState({})
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -19,13 +19,15 @@ function Explore() {
                     "Content-Type": "application/json",
                     Authorization: auth.username,
                 }
-            });
-            const responseData = await response.json();
-            console.log(responseData.data.posts)
-            setPosts(responseData.data.posts)
-        };
-        fetchPost();
-    }, []);
+            })
+            const responseData = await response.json()
+            if(response.status === 200)
+                setPosts(responseData.data.posts)
+            if(response.status === 500)
+                NotificationManager.error(responseData.message, 'Internal server error.', 2000)
+        }
+        fetchPost()
+    }, [])
 
     return(
     <>
@@ -41,8 +43,8 @@ function Explore() {
             <div className="postsWrapper">
                 {posts.map( (post) => (
                     <div key={post.id} className="profilePostWrapper" onClick={() =>{
-                        setShowPostData(post);
-                        setShowPosts(true);
+                        setShowPostData(post)
+                        setShowPosts(true)
                     }}>
                         <div className="profilePost">
                             <img
@@ -56,10 +58,10 @@ function Explore() {
             </div>
         </PostsContainer>
     </>
-    );
+    )
 }
 
-export default Explore;
+export default Explore
 
 const PostsContainer = styled.div`
     display: flex;
@@ -91,4 +93,4 @@ const PostsContainer = styled.div`
         margin: auto;
         display: block;
     }
-`;
+`

@@ -205,6 +205,6 @@ const SignupContainer = styled.div`
         color: #0095f6;
         font-weight: 500;
     }
-`;
+`
 
 export default Signup

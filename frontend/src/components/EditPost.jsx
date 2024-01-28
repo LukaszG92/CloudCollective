@@ -1,16 +1,14 @@
-import styled from "styled-components";
-import {useContext, useState} from "react";
-import { AuthContext } from "../context/auth-context";
-import {NotificationManager} from "react-notifications";
-import NotificationContainer from "react-notifications/lib/NotificationContainer";
+import styled from "styled-components"
+import { useState} from "react"
+import {NotificationManager} from "react-notifications"
+import NotificationContainer from "react-notifications/lib/NotificationContainer"
 
 function EditPost(props) {
 
-    const auth = useContext(AuthContext)
     const [description, setDescription] = useState(props.post.description)
 
     const editPostHandler = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
         const response = await fetch('http://localhost:8000/api/posts/'+props.post.id, {
             method: 'PATCH',
             headers: {
@@ -19,10 +17,10 @@ function EditPost(props) {
             body: JSON.stringify({
                 description,
             })
-        });
-        let responseData = await response.json();
+        })
+        let responseData = await response.json()
         if(response.status === 200)
-            props.onClose(responseData.data.post);
+            props.onClose(responseData.data.post)
         if(response.status === 422)
             NotificationManager.warning(responseData.message, 'Invalid data warning.', 2000)
         if(response.status === 500)
@@ -47,7 +45,7 @@ function EditPost(props) {
                         <div className="editProfileBoxInput">
                             <input
                                 onChange={(e) => {
-                                    setDescription(e.target.value);
+                                    setDescription(e.target.value)
                                 }}
                                 value={description}
                                 required
@@ -63,7 +61,7 @@ function EditPost(props) {
                 </div>
             </div>
         </EditProfileContainer>
-    );
+    )
 }
 
 const EditProfileContainer = styled.div`
@@ -123,6 +121,6 @@ const EditProfileContainer = styled.div`
         display: flex;
         flex-direction: column;
     } 
-`;
+`
 
-export default EditPost;
+export default EditPost

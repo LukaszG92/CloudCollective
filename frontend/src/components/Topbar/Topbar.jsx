@@ -1,50 +1,53 @@
-import React, { useContext, useEffect, useState } from "react";
-import styled from "styled-components";
-import { AiOutlineSearch } from "react-icons/ai";
-import { FiSearch } from "react-icons/fi";
-import { BsPlusSquare } from "react-icons/bs";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import Modal from "../UI/Modal";
-import Share from "./Share";
-import Backdrop from "../UI/Backdrop";
-import SearchUser from "./SearchUser";
-import { AuthContext } from "../../context/auth-context";
+import React, { useContext, useState } from "react"
+import styled from "styled-components"
+import { AiOutlineSearch } from "react-icons/ai"
+import { FiSearch } from "react-icons/fi"
+import { BsPlusSquare } from "react-icons/bs"
+import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
+import Modal from "../UI/Modal"
+import Share from "./Share"
+import Backdrop from "../UI/Backdrop"
+import SearchUser from "./SearchUser"
+import { AuthContext } from "../../context/auth-context"
+import {NotificationManager} from "react-notifications";
 
 function Topbar() {
-    const auth = useContext(AuthContext);
-    const navigate = useNavigate();
-    const [showMenu, setShowMenu] = useState(false);
-    const [showAddPost, setShowAddPost] = useState(false);
-    const [showSearch, setshowSearch] = useState(false);
-    const [usersSearch, setusersSearch] = useState([]);
-    const [searchquery, setSearchquery] = useState("");
-    const [showBarSearchMobile, setShowBarSearchMobile] = useState(false);
+    const auth = useContext(AuthContext)
+    const navigate = useNavigate()
+    const [showMenu, setShowMenu] = useState(false)
+    const [showAddPost, setShowAddPost] = useState(false)
+    const [showSearch, setshowSearch] = useState(false)
+    const [usersSearch, setusersSearch] = useState([])
+    const [showBarSearchMobile, setShowBarSearchMobile] = useState(false)
 
     const showBarSearchMobileHandler = () => {
-        setShowBarSearchMobile(true);
-    };
+        setShowBarSearchMobile(true)
+    }
     const hideAddPostHandler = () => {
-        setShowAddPost(false);
-    };
+        setShowAddPost(false)
+    }
     const hideAddPostWithBackdropHandler = () => {
-        setShowAddPost(false);
-    };
+        setShowAddPost(false)
+    }
     const hideBarSearchMobileHandler = () => {
-        setShowBarSearchMobile(false);
-        setshowSearch(false);
-    };
+        setShowBarSearchMobile(false)
+        setshowSearch(false)
+    }
     const searchHandler = async (e) => {
-        setSearchquery(e.target.value)
         if (e.target.value.length < 1) {
-            setshowSearch(false);
+            setshowSearch(false)
         } else {
-            setshowSearch(true);
+            setshowSearch(true)
             let response = await fetch("http://localhost:8000/api/users/search/"+e.target.value)
-            let responseData = await response.json();
-            setusersSearch(responseData.data.users);
+            let responseData = await response.json()
+            if(response.status === 200)
+                setusersSearch(responseData.data.users)
+            if(response.status === 500)
+                NotificationManager.error(responseData.message, 'Internal server error.', 2000)
+
         }
-    };
+    }
 
     return (
         <>
@@ -109,7 +112,7 @@ function Topbar() {
                             <img
                                 className="TopbarIcon"
                                 onClick={() => {
-                                    navigate("/");
+                                    navigate("/")
                                 }}
                                 alt=""
                                 src="http://localhost:3000/images/home.png"
@@ -119,7 +122,7 @@ function Topbar() {
                             <img
                                 className="TopbarIcon"
                                 onClick={() => {
-                                    navigate("/explore", { state: {'username':'username'} });
+                                    navigate("/explore", { state: {'username':'username'} })
                                 }}
                                 alt=""
                                 src="http://localhost:3000/images/explore.png"
@@ -128,7 +131,7 @@ function Topbar() {
                         <div className="TopbarIconItem">
                             <BsPlusSquareStyled
                                 onClick={() => {
-                                    setShowAddPost(true);
+                                    setShowAddPost(true)
                                 }}
                             />
                         </div>
@@ -136,7 +139,7 @@ function Topbar() {
                         <img
                             className="TopbarImg"
                             onClick={() => {
-                                setShowMenu(!showMenu);
+                                setShowMenu(!showMenu)
                             }}
                             alt=""
                             src="http://localhost:3000/images/defaultavatar.png"
@@ -146,13 +149,13 @@ function Topbar() {
                                 <span
                                     className="menuItems"
                                     onClick={() => {
-                                        navigate(`/profile/${auth.username}`);
+                                        navigate(`/profile/${auth.username}`)
                                     }}
                                 > Profilo </span>
                                 <span className="menuItems"
                                       onClick={() => {
-                                          auth.logout();
-                                          navigate(`/login`);
+                                          auth.logout()
+                                          navigate(`/login`)
                                       }}
                                 > Logout </span>
                             </div>
@@ -161,7 +164,7 @@ function Topbar() {
                 </div>
             </TopbarContainer>
         </>
-    );
+    )
 }
 
 const SearchBarMobileContainer = styled.div`
@@ -367,6 +370,6 @@ const TopbarContainer = styled.div`
     object-fit: cover;
     cursor: pointer;
   }
-`;
+`
 
-export default Topbar;
+export default Topbar

@@ -1,41 +1,41 @@
-import styled from "styled-components";
-import {useContext, useEffect, useRef, useState} from "react";
-import { AuthContext } from "../context/auth-context";
-import {NotificationContainer, NotificationManager} from "react-notifications";
+import styled from "styled-components"
+import {useContext, useEffect, useRef, useState} from "react"
+import { AuthContext } from "../context/auth-context"
+import {NotificationContainer, NotificationManager} from "react-notifications"
 
 function EditProfile(props) {
     const auth = useContext(AuthContext)
 
-    const [nome, setNome] = useState(props.user.nome);
+    const [nome, setNome] = useState(props.user.nome)
     const [cognome, setCognome] = useState(props.user.cognome)
-    const [bio, setBio] = useState(props.user.bio);
-    const [mail, setMail] = useState(props.user.email);
-    const [file, setFile] = useState();
-    const [previewUrl, setPreviewUrl] = useState();
+    const [bio, setBio] = useState(props.user.bio)
+    const [mail, setMail] = useState(props.user.email)
+    const [file, setFile] = useState()
+    const [previewUrl, setPreviewUrl] = useState()
 
-    const filePickerRef = useRef();
+    const filePickerRef = useRef()
 
     useEffect(() => {
         if (!file) {
-            return;
+            return
         }
-        const fileReader = new FileReader();
+        const fileReader = new FileReader()
         fileReader.onload = () => {
-            setPreviewUrl(fileReader.result);
-        };
-        fileReader.readAsDataURL(file);
-    }, [file]);
+            setPreviewUrl(fileReader.result)
+        }
+        fileReader.readAsDataURL(file)
+    }, [file])
 
     const pickedHandler = event => {
-        let pickedFile;
+        let pickedFile
         if (event.target.files && event.target.files.length === 1) {
-            pickedFile = event.target.files[0];
-            setFile(pickedFile);
+            pickedFile = event.target.files[0]
+            setFile(pickedFile)
         }
-    };
+    }
 
     const editProfileHandler = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
         let formData = new FormData()
         formData.append('nome', nome)
         formData.append('cognome', cognome)
@@ -51,10 +51,10 @@ function EditProfile(props) {
             },
             body:
                 formData
-        });
-        const responseData = await response.json();
+        })
+        const responseData = await response.json()
         if(response.status === 200)
-            props.onClose();
+            props.onClose()
         if(response.status === 422)
             NotificationManager.warning(responseData.message, 'Invalid data warning.', 2000)
         if(response.status === 500)
@@ -90,7 +90,7 @@ function EditProfile(props) {
                         <div className="editProfileBoxInput">
                             <input
                                 onChange={(e) => {
-                                    setNome(e.target.value);
+                                    setNome(e.target.value)
                                 }}
                                 value={nome}
                                 required
@@ -102,7 +102,7 @@ function EditProfile(props) {
                         <div className="editProfileBoxInput">
                             <input
                                 onChange={(e) => {
-                                    setCognome(e.target.value);
+                                    setCognome(e.target.value)
                                 }}
                                 value={cognome}
                                 required
@@ -114,7 +114,7 @@ function EditProfile(props) {
                         <div className="editProfileBoxInput">
                             <input
                                 onChange={(e) => {
-                                    setBio(e.target.value);
+                                    setBio(e.target.value)
                                 }}
                                 value={bio}
                                 type="textarea"
@@ -125,7 +125,7 @@ function EditProfile(props) {
                         <div className="editProfileBoxInput">
                             <input
                                 onChange={(e) => {
-                                    setMail(e.target.value);
+                                    setMail(e.target.value)
                                 }}
                                 value={mail}
                                 required
@@ -143,7 +143,7 @@ function EditProfile(props) {
                 </div>
             </div>
         </EditProfileContainer>
-    );
+    )
 }
 
 const EditProfileContainer = styled.div`
@@ -204,6 +204,6 @@ const EditProfileContainer = styled.div`
         display: flex;
         flex-direction: column;
     } 
-`;
+`
 
-export default EditProfile;
+export default EditProfile

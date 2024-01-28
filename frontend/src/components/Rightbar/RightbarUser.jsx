@@ -1,17 +1,16 @@
-import {Link, useNavigate} from "react-router-dom";
-import React, {useContext, useEffect, useState} from "react";
-import PropTypes from "prop-types";
-import Post from "../Post";
-import {AuthContext} from "../../context/auth-context";
+import { useNavigate} from "react-router-dom"
+import React, {useContext, useEffect, useState} from "react"
+import {AuthContext} from "../../context/auth-context"
+import {NotificationManager} from "react-notifications";
 
 function RightbarUser(props) {
 
     const auth = useContext(AuthContext)
     const navigate = useNavigate()
-    const [user, setUser] = useState([]);
+    const [user, setUser] = useState([])
 
     const unfollowHandler = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
         let response = await fetch("http://localhost:8000/api/users/follow/" + user.username, {
             method: 'POST',
             headers: {
@@ -20,18 +19,25 @@ function RightbarUser(props) {
             body: JSON.stringify({
                 user: auth.username,
             })
-        });
-        window.location.reload();
+        })
+        let responseData = await response.json()
+        if(response.status === 200)
+            window.location.reload()
+        if(response.status === 500)
+            NotificationManager.error(responseData.message, 'Internal server error.', 2000)
     }
 
     useEffect(() => {
         const fetchUserData = async () => {
-            const response = await fetch('http://localhost:8000/api/users/u/'+props.username);
-            const responseData = await response.json();
-            setUser(responseData.data.user)
-        };
-        fetchUserData();
-    }, [props.username]);
+            const response = await fetch('http://localhost:8000/api/users/u/'+props.username)
+            const responseData = await response.json()
+            if(response.status === 200)
+                setUser(responseData.data.user)
+            if(response.status === 500)
+                NotificationManager.error(responseData.message, 'Internal server error.', 2000)
+        }
+        fetchUserData()
+    }, [props.username])
 
     return (
             <div key={user.username} className="rightbarFollowing">
@@ -51,7 +57,7 @@ function RightbarUser(props) {
                     </button>
                 </div>
             </div>
-        );
+        )
 }
 
-export default RightbarUser;
+export default RightbarUser

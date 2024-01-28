@@ -1,41 +1,41 @@
-import {useState, useEffect, useContext} from 'react';
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from '../../context/auth-context';
-import styled from "styled-components";
-import {NotificationContainer, NotificationManager} from "react-notifications";
+import {useState, useEffect, useContext} from 'react'
+import { useNavigate } from "react-router-dom"
+import { AuthContext } from '../../context/auth-context'
+import styled from "styled-components"
+import {NotificationContainer, NotificationManager} from "react-notifications"
 
 function Login() {
-    const auth = useContext(AuthContext);
-    const navigate = useNavigate();
-    const [loginPageImg, setLoginPageImg] = useState("");
-    const [show1, setshow1] = useState(1);
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const auth = useContext(AuthContext)
+    const navigate = useNavigate()
+    const [loginPageImg, setLoginPageImg] = useState("")
+    const [show1, setshow1] = useState(1)
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
 
     useEffect(() => {
         const interval = setInterval(async () => {
             if (show1 < 4) {
                 setshow1(show1+1)
             } else {
-                setshow1(1);
+                setshow1(1)
             }
-        }, 3000);
+        }, 3000)
         return () => {
-            clearInterval(interval);
-        };
-    }, [show1]);
+            clearInterval(interval)
+        }
+    }, [show1])
 
     useEffect(() => {
         const setImg = async () => {
-            const imgUrl =`http://localhost:3000/images/loginpage${show1}.png`;
+            const imgUrl =`http://localhost:3000/images/loginpage${show1}.png`
             setLoginPageImg(imgUrl)
         }
         setImg()
-    }, [show1]);
+    }, [show1])
 
 
     const HandlerLoginForm = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
         let response = await fetch('http://localhost:8000/api/users/login', {
             method: 'POST',
             headers: {
@@ -46,7 +46,7 @@ function Login() {
                 password
             })
         })
-        let responseData = await response.json();
+        let responseData = await response.json()
         if(response.status === 200)
             auth.login(responseData.data.username)
         if(response.status === 403)
@@ -55,7 +55,7 @@ function Login() {
             NotificationManager.warning(responseData.message, 'Invalid data warning.', 2000)
         if(response.status === 500)
             NotificationManager.error(responseData.message, 'Internal server error.', 2000)
-    };
+    }
 
     return (
         <LoginContainer>
@@ -82,7 +82,7 @@ function Login() {
                                 <form className="loginBox" onSubmit={HandlerLoginForm}>
                                     <input
                                         onChange={(e) => {
-                                            setUsername(e.target.value);
+                                            setUsername(e.target.value)
                                         }}
                                         placeholder="Username"
                                         type = "text"
@@ -91,7 +91,7 @@ function Login() {
                                     />
                                     <input
                                         onChange={(e) => {
-                                            setPassword(e.target.value);
+                                            setPassword(e.target.value)
                                         }}
                                         placeholder="Password"
                                         type = "password"
@@ -111,7 +111,7 @@ function Login() {
                                 <span
                                     className="SignUptext"
                                     onClick={() => {
-                                        navigate("/signup");
+                                        navigate("/signup")
                                     }} >
                                     Sign up
                                 </span>
@@ -121,7 +121,7 @@ function Login() {
                 </div>
             </div>
         </LoginContainer>
-    );
+    )
 }
 
 const LoginContainer = styled.div`
@@ -152,7 +152,7 @@ const LoginContainer = styled.div`
         position: relative;
         width: 100%;
         height: 600px;
-        background-image: url("https://cloudcollective.blob.core.windows.net/images/loginPage.png?sp=r&st=2024-01-20T18:24:31Z&se=2024-01-21T02:24:31Z&sv=2022-11-02&sr=b&sig=MmB2tj1V1peauGbArZwumggohYW3D9vz88u2QGtxs7w%3D");
+        background-image: url("http://localhost:3000/images/loginPage.png");
         min-width: 460px;
         background-repeat: no-repeat;
         background-position: right 2px;
@@ -236,7 +236,6 @@ const LoginContainer = styled.div`
         font-weight: 500;
         cursor: pointer;
     }
-`;
+`
 
-
-export default Login;
+export default Login

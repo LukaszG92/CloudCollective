@@ -1,20 +1,24 @@
-import styled from "styled-components";
-import {useContext, useEffect, useState} from "react";
+import styled from "styled-components"
+import {useContext, useEffect, useState} from "react"
 import RightbarUser from './RightbarUser'
-import { AuthContext} from "../../context/auth-context";
+import { AuthContext} from "../../context/auth-context"
+import {NotificationManager} from "react-notifications"
 
-function Rightbar(props) {
-    const [Followings, setFollowings] = useState([]);
-    const auth = useContext(AuthContext);
+function Rightbar() {
+    const [Followings, setFollowings] = useState([])
+    const auth = useContext(AuthContext)
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const response = await fetch('http://localhost:8000/api/users/'+auth.username+'/followings');
-            const responseData = await response.json();
-            setFollowings(responseData.data.followings)
-        };
-        fetchUsers();
-    }, []);
+            const response = await fetch('http://localhost:8000/api/users/'+auth.username+'/followings')
+            const responseData = await response.json()
+            if(response.status === 200)
+                setFollowings(responseData.data.followings)
+            if(response.status === 500)
+                NotificationManager.error(responseData.message, 'Internal server error.', 2000)
+        }
+        fetchUsers()
+    }, [])
 
     return (
     <RightbarContainer>
@@ -30,7 +34,7 @@ function Rightbar(props) {
             </div>
         </div>
     </RightbarContainer>
-    );
+    )
 }
 
 const RightbarContainer = styled.div`
@@ -125,5 +129,6 @@ const RightbarContainer = styled.div`
     .rightbarFollowButton:focus {
         outline: none;
     }
-`;
-export default Rightbar;
+`
+
+export default Rightbar

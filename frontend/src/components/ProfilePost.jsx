@@ -1,29 +1,32 @@
-import React, {useEffect, useState} from "react";
-import Modal from "./UI/Modal";
-import EditProfile from "./EditProfile";
-import Post from "./Post";
+import React, {useEffect, useState} from "react"
+import Modal from "./UI/Modal"
+import Post from "./Post"
+import {NotificationManager} from "react-notifications";
 
 function ProfilePost(props) {
 
-    const [showPost, setShowPost] = useState(false);
-    const [post, setPost] = useState({});
+    const [showPost, setShowPost] = useState(false)
+    const [post, setPost] = useState({})
 
     const hideShowPostHandler = () => {
-        setShowPost(false);
-    };
+        setShowPost(false)
+    }
     const showShowPostHandler = (e) => {
-        e.preventDefault();
-        setShowPost(true);
-    };
+        e.preventDefault()
+        setShowPost(true)
+    }
 
     useEffect(() => {
         const fetchPost = async () => {
-            const response = await fetch('http://localhost:8000/api/posts/p/'+props.postId);
-            const responseData = await response.json();
-            setPost(responseData.data.post)
-        };
-        fetchPost();
-    }, []);
+            const response = await fetch('http://localhost:8000/api/posts/p/'+props.postId)
+            const responseData = await response.json()
+            if(response.status === 200)
+                setPost(responseData.data.post)
+            if(response.status === 500)
+                NotificationManager.error(responseData.message, 'Internal server error.', 2000)
+        }
+        fetchPost()
+    }, [])
 
     return (
     <>
@@ -47,4 +50,4 @@ function ProfilePost(props) {
     )
 }
 
-export default ProfilePost;
+export default ProfilePost

@@ -1,13 +1,14 @@
-import styled from "styled-components";
+import styled from "styled-components"
 import Post from './Post'
-import {useState, useRef, useEffect, useContext} from "react";
+import {useState, useRef, useEffect, useContext} from "react"
 import { AuthContext } from "../context/auth-context"
+import {NotificationManager} from "react-notifications"
 
-function Feed(props) {
+function Feed() {
     const auth = useContext(AuthContext)
-    const [currPage, setCurrPage] = useState(1);
-    const [Posts, setPosts] = useState([]);
-    const listInnerRef = useRef();
+    const [currPage, setCurrPage] = useState(1)
+    const [Posts, setPosts] = useState([])
+    const listInnerRef = useRef()
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -16,22 +17,25 @@ function Feed(props) {
                     "Content-Type": "application/json",
                     Authorization: auth.username,
                 }
-            });
+            })
             const responseData = await response.json()
-            setPosts(responseData.data.posts)
-        };
-        fetchPost();
-    }, []);
+            if(response.status === 200)
+                setPosts(responseData.data.posts)
+            if(response.status === 500)
+                NotificationManager.error(responseData.message, 'Internal server error.', 2000)
+        }
+        fetchPost()
+    }, [])
 
 
     const onScroll = () => {
         if (listInnerRef.current) {
-            const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
+            const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current
             if (scrollTop + clientHeight === scrollHeight) {
-                setCurrPage(currPage + 1);
+                setCurrPage(currPage + 1)
             }
         }
-    };
+    }
 
     return(
         <>
@@ -46,7 +50,7 @@ function Feed(props) {
                 </div>
             </FeedContainer>
         </>
-    );
+    )
 }
 
 const FeedContainer = styled.div`
@@ -66,6 +70,6 @@ const FeedContainer = styled.div`
             background-color: rgb(192, 192, 192);
         }
     }
-`;
+`
 
 export default Feed

@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from "styled-components"
 
 const GlobalStyles = createGlobalStyle`
     {
@@ -9,6 +9,6 @@ const GlobalStyles = createGlobalStyle`
     Link {
         text-decoration: none;
     }
-`;
+`
 
-export default GlobalStyles;
+export default GlobalStyles

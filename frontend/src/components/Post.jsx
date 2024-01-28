@@ -1,28 +1,27 @@
-
-import { FiMoreVertical } from "react-icons/fi";
-import { useNavigate} from 'react-router-dom';
-import styled from "styled-components";
-import {AiFillHeart} from "react-icons/ai";
-import React, {useContext, useEffect, useState} from "react";
-import {AuthContext} from "../context/auth-context";
-import Modal from "./UI/Modal";
-import EditPost from "./EditPost";
-import {NotificationManager} from "react-notifications";
-import NotificationContainer from "react-notifications/lib/NotificationContainer";
+import { FiMoreVertical } from "react-icons/fi"
+import { useNavigate} from 'react-router-dom'
+import styled from "styled-components"
+import {AiFillHeart} from "react-icons/ai"
+import React, {useContext, useEffect, useState} from "react"
+import {AuthContext} from "../context/auth-context"
+import Modal from "./UI/Modal"
+import EditPost from "./EditPost"
+import {NotificationManager} from "react-notifications"
+import NotificationContainer from "react-notifications/lib/NotificationContainer"
 
 export default function Post( props ) {
     const auth = useContext(AuthContext)
     const navigate = useNavigate()
+    const post = props.post
 
-    const [commentInput, setCommentInput] = useState("");
-    const [comments, setComments] = useState([]);
-    const [showPost, setShowPost] = useState(false);
-    const [post, setPost] = useState(props.post)
-    const [isLiked, setIsLiked] = useState(false);
-    const [likes, setLikes] = useState([]);
-    const [showEditPost, setShowEditPost] = useState(false);
-    const [showMenu, setShowMenu] = useState(false);
-    const [profilePic, setProfilePic] = useState("");
+    const [commentInput, setCommentInput] = useState("")
+    const [comments, setComments] = useState([])
+    const [showPost, setShowPost] = useState(false)
+    const [isLiked, setIsLiked] = useState(false)
+    const [likes, setLikes] = useState([])
+    const [showEditPost, setShowEditPost] = useState(false)
+    const [showMenu, setShowMenu] = useState(false)
+    const [profilePic, setProfilePic] = useState("")
 
     const addCommentHandler = async () => {
         let response = await fetch("http://localhost:8000/api/comments/"+post.id+"/new", {
@@ -36,8 +35,6 @@ export default function Post( props ) {
             })
         })
         let responseData = await response.json()
-        console.log(response)
-        console.log(responseData)
         if(response.status === 200)
             setShowPost(!showPost)
         if(response.status === 422)
@@ -47,7 +44,7 @@ export default function Post( props ) {
 
     }
 
-    const closeHandler = (updatedPost) => {
+    const closeHandler = () => {
         setShowEditPost(false)
         setShowMenu(false)
     }
@@ -58,46 +55,64 @@ export default function Post( props ) {
                 Authorization: auth.username
             }
         })
-        let responseData = await response.json();
-        setIsLiked(!isLiked);
+        let responseData = await response.json()
+        if(response.status === 200)
+            setIsLiked(!isLiked)
+        if(response.status === 500)
+            NotificationManager.error(responseData.message, 'Internal server error.', 2000)
     }
 
     const deletePostHandler = async () => {
         let response = await fetch("http://localhost:8000/api/posts/"+post.id, {
             method: 'DELETE'
         })
+        let responseData = await response.json()
+        if(response.status === 200)
+            NotificationManager.success(responseData.message, 'Operation completed successfully', 2000)
+        if(response.status === 500)
+            NotificationManager.error(responseData.message, 'Internal server error.', 2000)
     }
 
     useEffect(() => {
         const fetchProfilePic = async () => {
-            const response = await fetch('http://localhost:8000/api/users/u/'+post.creatorUsername);
-            const responseData = await response.json();
-            setProfilePic(responseData.data.user.profilePic)
-        };
-        fetchProfilePic();
-    }, []);
+            const response = await fetch('http://localhost:8000/api/users/u/'+post.creatorUsername)
+            const responseData = await response.json()
+            if(response.status === 200)
+                setProfilePic(responseData.data.user.profilePic)
+            if(response.status === 500)
+                NotificationManager.error(responseData.message, 'Internal server error.', 2000)
+        }
+        fetchProfilePic()
+    }, [])
 
     useEffect(() => {
         const fetchPostLikes = async () => {
-            let response = await fetch('http://localhost:8000/api/posts/' + post.id + '/likes');
-            let responseData = await response.json();
-            setLikes(responseData.data.likes);
+            let response = await fetch('http://localhost:8000/api/posts/' + post.id + '/likes')
+            let responseData = await response.json()
+            if(response.status === 200)
+                setLikes(responseData.data.likes)
+            if(response.status === 500)
+                NotificationManager.error(responseData.message, 'Internal server error.', 2000)
         }
-        fetchPostLikes();
+        fetchPostLikes()
     }, [isLiked])
 
     useEffect(() => {
         const getIsLiked = () => {
-            setIsLiked(likes.includes(auth.username));
+            setIsLiked(likes.includes(auth.username))
         }
-        getIsLiked();
-    }, [likes]);
+        getIsLiked()
+    }, [likes])
 
     useEffect( () =>{
         const fetchComments = async () => {
             let response = await fetch(`http://localhost:8000/api/comments/${post.id}`)
-            let responseData = await response.json();
-            setComments(responseData.data.comments);
+            let responseData = await response.json()
+            if(response.status === 200)
+                setComments(responseData.data.comments)
+            if(response.status === 500)
+                NotificationManager.error(responseData.message, 'Internal server error.', 2000)
+
         }
         fetchComments()
     }, [showPost])
@@ -113,7 +128,7 @@ export default function Post( props ) {
             {showPost && (
                 <Modal
                     onClose={() => {
-                        setShowPost(false);
+                        setShowPost(false)
                     }}
                 >
                     <ShowPostContainer>
@@ -122,7 +137,7 @@ export default function Post( props ) {
                             <form onSubmit={addCommentHandler} >
                             <input
                                 onChange={(e) => {
-                                    setCommentInput(e.target.value);
+                                    setCommentInput(e.target.value)
                                 }}
                                 className="addCommentInput"
                                 placeholder="Write your comment here..."
@@ -162,7 +177,7 @@ export default function Post( props ) {
                     {(post.creatorUsername === auth.username) &&
                         <FiMoreVertical
                             onClick={() => {
-                                setShowMenu(!showMenu);
+                                setShowMenu(!showMenu)
                             }}
                         />
                     }
@@ -208,7 +223,7 @@ export default function Post( props ) {
                 </div>
             </div>
         </PostContainer>
-    );
+    )
 }
 
 const PostContainer = styled.div`
@@ -419,4 +434,4 @@ const ShowPostContainer = styled.div`
   .usernameComment {
     font-weight: bold;
   }
-`;
+`

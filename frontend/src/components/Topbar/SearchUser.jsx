@@ -1,16 +1,16 @@
-import {Link, useNavigate} from "react-router-dom";
-import React from "react";
+import { useNavigate} from "react-router-dom"
+import React from "react"
 
 function SearchUser(props) {
 
-    const navigate = useNavigate();
+    const navigate = useNavigate()
 
     return (
         <div className="users"
              style={{textDecoration: "none"}}
              onClick={() => {
                  navigate(`/profile/${props.user.username}`)
-                 props.onClose();
+                 props.onClose()
              }}
          >
                 <div className="user">
@@ -30,4 +30,4 @@ function SearchUser(props) {
     )
 }
 
-export default SearchUser;
+export default SearchUser
