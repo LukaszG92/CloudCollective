@@ -1,17 +1,15 @@
 import styled from "styled-components";
 import {useContext, useEffect, useRef, useState} from "react";
-import {useNavigate} from "react-router-dom";
 import { AuthContext } from "../context/auth-context";
 import {NotificationContainer, NotificationManager} from "react-notifications";
 
 function EditProfile(props) {
     const auth = useContext(AuthContext)
-    const navigate = useNavigate();
+
     const [nome, setNome] = useState(props.user.nome);
     const [cognome, setCognome] = useState(props.user.cognome)
     const [bio, setBio] = useState(props.user.bio);
     const [mail, setMail] = useState(props.user.email);
-    const [profilePic, setProfilePic] = useState(props.user.profilePic)
     const [file, setFile] = useState();
     const [previewUrl, setPreviewUrl] = useState();
 
@@ -42,8 +40,8 @@ function EditProfile(props) {
         formData.append('nome', nome)
         formData.append('cognome', cognome)
         formData.append('bio', bio)
-        formData.append('mail', mail)
-        formData.append('profilePic', profilePic)
+        formData.append('email', mail)
+        formData.append('profilePic', props.user.profilePic)
         if(file)
             formData.append('image', file)
         const response = await fetch('http://localhost:8000/api/users/update', {
@@ -71,7 +69,7 @@ function EditProfile(props) {
                     <label className="fileupload" htmlFor="file">
                         <div className="imgWrapper">
                             <img
-                                src={previewUrl ? previewUrl : profilePic}
+                                src={previewUrl ? previewUrl : props.user.profilePic}
                                 alt=""
                                 className="editProfileLeftImg"
                             />
@@ -88,7 +86,7 @@ function EditProfile(props) {
                     </label>
                 </div>
                 <div className="editProfileRight">
-                    <form className="editProfileBox">
+                    <form className="editProfileBox" onSubmit={editProfileHandler}>
                         <div className="editProfileBoxInput">
                             <input
                                 onChange={(e) => {
@@ -119,7 +117,6 @@ function EditProfile(props) {
                                     setBio(e.target.value);
                                 }}
                                 value={bio}
-                                required
                                 type="textarea"
                                 className="BoxInput"
                                 placeholder="Bio..."
@@ -138,8 +135,7 @@ function EditProfile(props) {
                             />
                         </div>
                         <div className="editProfileBoxInput">
-                            <button className="editProfileButton"
-                                    onClick={editProfileHandler}>
+                            <button className="editProfileButton">
                                 Save
                             </button>
                         </div>

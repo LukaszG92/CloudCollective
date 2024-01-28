@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import {useContext, useState} from "react";
-import {useNavigate} from "react-router-dom";
 import { AuthContext } from "../context/auth-context";
+import {NotificationManager} from "react-notifications";
+import NotificationContainer from "react-notifications/lib/NotificationContainer";
 
 function EditPost(props) {
 
@@ -20,11 +21,17 @@ function EditPost(props) {
             })
         });
         let responseData = await response.json();
-        props.onClose(responseData.data.post);
+        if(response.status === 200)
+            props.onClose(responseData.data.post);
+        if(response.status === 422)
+            NotificationManager.warning(responseData.message, 'Invalid data warning.', 2000)
+        if(response.status === 500)
+            NotificationManager.error(responseData.message, 'Internal server error.', 2000)
     }
 
     return (
         <EditProfileContainer>
+            <NotificationContainer/>
             <div className="editProfileWrapper">
                 <div className="editProfileLeft">
                     <label className="fileupload" htmlFor="file">
@@ -36,7 +43,7 @@ function EditPost(props) {
                     </label>
                 </div>
                 <div className="editProfileRight">
-                    <form className="editProfileBox">
+                    <form className="editProfileBox" onSubmit={editPostHandler} noValidate={true}>
                         <div className="editProfileBoxInput">
                             <input
                                 onChange={(e) => {
@@ -50,10 +57,7 @@ function EditPost(props) {
                             />
                         </div>
                         <div className="editProfileBoxInput">
-                            <button className="editProfileButton"
-                                    onClick={editPostHandler}>
-                                Save
-                            </button>
+                            <button className="editProfileButton"> Save </button>
                         </div>
                     </form>
                 </div>

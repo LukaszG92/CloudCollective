@@ -2,6 +2,8 @@ import {useContext, useState, useRef, useEffect} from "react";
 import styled from "styled-components";
 import { MdPermMedia } from "react-icons/md";
 import {AuthContext} from "../../context/auth-context";
+import {NotificationManager} from "react-notifications";
+import NotificationContainer from "react-notifications/lib/NotificationContainer";
 
 function Share(props) {
     const auth = useContext(AuthContext);
@@ -36,6 +38,12 @@ function Share(props) {
             body: formData,
         })
         let responseData = await response.json();
+        if(response.status === 200)
+            props.hideAddPostHandler()
+        if(response.status === 422)
+            NotificationManager.warning(responseData.message, 'Invalid data warning.', 2000)
+        if(response.status === 500)
+            NotificationManager.error(responseData.message, 'Internal server error.', 2000)
     }
 
     const pickedHandler = event => {
@@ -48,6 +56,7 @@ function Share(props) {
 
     return (
         <ShareContainer>
+            <NotificationContainer/>
             <div className="shareWrapper">
                 <div className="shareTop">
                     <img
@@ -56,7 +65,7 @@ function Share(props) {
                         className="postPreview"
                     />
                 </div>
-                <div>
+                <form className="shareBottom" onSubmit={shareHandler} noValidate={true}>
                     <input
                         onChange={(e) => {
                             setDescription(e.target.value);
@@ -67,13 +76,11 @@ function Share(props) {
                         className="BoxInput"
                         placeholder="Description..."
                     />
-                </div>
-                <hr className="shareHr"/>
-                <form className="shareBottom">
+                    <hr className="shareHr"/>
                     <div className="shareOptions">
                         <label htmlFor="file" className="shareOption">
                             <MdPermMedia className="shareIcon"/>
-                            <span className="shareOptionText">Photo or Video</span>
+                            <span className="shareOptionText">Photo</span>
                             <input
                                 style={{display: "none"}}
                                 type="file"
@@ -84,9 +91,7 @@ function Share(props) {
                             />
                         </label>
                     </div>
-                    <button className="shareButton" type="submit" onClick={shareHandler}>
-                        Share
-                    </button>
+                    <button className="shareButton"> Share </button>
                 </form>
             </div>
         </ShareContainer>

@@ -1,7 +1,19 @@
 const Comment = require('../Models/commentModel');
+const {validationResult} = require("express-validator");
 
 
 exports.createComment = async (req, res) => {
+    console.log('Comment starting...')
+    const errors = validationResult(req);
+    console.log('Comment starting...')
+    if (!errors.isEmpty()) {
+        console.log(errors.array()[0].msg)
+        return res.status(422).send({
+            status: "failure",
+            message: errors.array()[0].msg
+        })
+    }
+
     let postId = req.params.post;
     let authorUsername = req.headers.authorization;
     let body = req.body.commentInput;
@@ -20,6 +32,7 @@ exports.createComment = async (req, res) => {
         })
     }
 
+    console.log('Response statusL: 200...')
     res.status(200).send({
         status: "success",
         message: "Comments created successfully.",

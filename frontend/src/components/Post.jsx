@@ -1,19 +1,19 @@
-import PropTypes from 'prop-types';
+
 import { FiMoreVertical } from "react-icons/fi";
-import {Link, useNavigate} from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import styled from "styled-components";
-import {formatDistance} from "date-fns";
 import {AiFillHeart} from "react-icons/ai";
 import React, {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../context/auth-context";
 import Modal from "./UI/Modal";
 import EditPost from "./EditPost";
+import {NotificationManager} from "react-notifications";
+import NotificationContainer from "react-notifications/lib/NotificationContainer";
 
 export default function Post( props ) {
     const auth = useContext(AuthContext)
     const navigate = useNavigate()
 
-    const [disabled, setDisabled] = useState(false);
     const [commentInput, setCommentInput] = useState("");
     const [comments, setComments] = useState([]);
     const [showPost, setShowPost] = useState(false);
@@ -35,13 +35,21 @@ export default function Post( props ) {
                 commentInput
             })
         })
-        setShowPost(!showPost);
+        let responseData = await response.json()
+        console.log(response)
+        console.log(responseData)
+        if(response.status === 200)
+            setShowPost(!showPost)
+        if(response.status === 422)
+            NotificationManager.warning(responseData.message, 'Invalid data warning.', 2000)
+        if(response.status === 500)
+            NotificationManager.error(responseData.message, 'Internal server error.', 2000)
+
     }
 
     const closeHandler = (updatedPost) => {
         setShowEditPost(false)
         setShowMenu(false)
-        window.location.reload()
     }
 
     const likeHandler = async () => {
@@ -58,7 +66,6 @@ export default function Post( props ) {
         let response = await fetch("http://localhost:8000/api/posts/"+post.id, {
             method: 'DELETE'
         })
-        window.location.reload();
     }
 
     useEffect(() => {
@@ -110,7 +117,9 @@ export default function Post( props ) {
                     }}
                 >
                     <ShowPostContainer>
+                        <NotificationContainer/>
                         <div className="addComment">
+                            <form onSubmit={addCommentHandler} >
                             <input
                                 onChange={(e) => {
                                     setCommentInput(e.target.value);
@@ -118,11 +127,13 @@ export default function Post( props ) {
                                 className="addCommentInput"
                                 placeholder="Write your comment here..."
                                 value={commentInput}
+                                required
                                 type="text"
                             />
-                            <button className="addCommentButton" onClick={addCommentHandler}>
+                            <button className="addCommentButton" >
                                 Add Comment
                             </button>
+                            </form>
                         </div>
                         <div className="showComments">
                             {comments.map( (c) => (

@@ -50,7 +50,7 @@ function Signup() {
                             <span className="signupRightTopLogo">instagram</span>
                         </div>
                         <div className="signupRightTopForm">
-                            <form className="signupBox">
+                            <form className="signupBox" onSubmit={handleSubmit}>
                                 <input
                                     onChange={(e) => {
                                         setNome(e.target.value)
@@ -97,8 +97,7 @@ function Signup() {
                                     className="signupInput"
                                 />
 
-                                <button className="signupButton" onClick={handleSubmit}>
-                                    Submit</button>
+                                <button className="signupButton"> Submit </button>
                             </form>
                         </div>
                     </div>

@@ -5,9 +5,18 @@ const sequelize = require('../utils/database');
 const blobStorage = require('../utils/blobStorage');
 const computerVision = require('../utils/imageClassifier');
 const {Op} = require("sequelize");
+const {validationResult} = require("express-validator");
 
 
 exports.createPost = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).send({
+            status: "failure",
+            message: errors.array()[0].msg
+        })
+    }
+
     let url = req.file.url.slice(0, req.file.url.indexOf('?'))
     let description = req.body.description
     let creatorUsername = req.headers.authorization
@@ -49,6 +58,14 @@ exports.createPost = async (req, res) => {
 }
 
 exports.updatePost = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).send({
+            status: "failure",
+            message: errors.array()[0].msg
+        })
+    }
+
     let postId = req.params.post
     let description = req.body.description
 
