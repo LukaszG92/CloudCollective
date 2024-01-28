@@ -13,6 +13,7 @@ export default function Post( props ) {
     const auth = useContext(AuthContext)
     const navigate = useNavigate()
 
+    const [disabled, setDisabled] = useState(false);
     const [commentInput, setCommentInput] = useState("");
     const [comments, setComments] = useState([]);
     const [showPost, setShowPost] = useState(false);

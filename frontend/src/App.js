@@ -5,7 +5,6 @@ import GlobalStyles from "./components/GlobalStyle";
 import {BrowserRouter, Routes, Route, useNavigate, Navigate} from "react-router-dom";
 import Profile from "./components/pages/Profile";
 import Explore from "./components/pages/Explore";
-import Messages from "./components/pages/Messages";
 import {useCallback, useEffect, useState} from "react";
 import { AuthContext } from "./context/auth-context"
 
@@ -36,7 +35,6 @@ function App(callback, deps) {
         routes = (
             <Routes>
                 <Route path="/home" element={<Home />} />
-                <Route path="/messages" element={<Messages/>} />
                 <Route path="/explore" element={<Explore/>} />
                 <Route path="/profile/:username" element={<Profile/>} />
                 <Route path='*' element={<Navigate to='/home' />} />

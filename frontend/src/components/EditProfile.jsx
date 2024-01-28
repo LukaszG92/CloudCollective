@@ -2,6 +2,7 @@ import styled from "styled-components";
 import {useContext, useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import { AuthContext } from "../context/auth-context";
+import {NotificationContainer, NotificationManager} from "react-notifications";
 
 function EditProfile(props) {
     const auth = useContext(AuthContext)
@@ -53,12 +54,18 @@ function EditProfile(props) {
             body:
                 formData
         });
+        const responseData = await response.json();
         if(response.status === 200)
             props.onClose();
+        if(response.status === 422)
+            NotificationManager.warning(responseData.message, 'Invalid data warning.', 2000)
+        if(response.status === 500)
+            NotificationManager.error(responseData.message, 'Internal server error.', 2000)
     }
 
     return (
         <EditProfileContainer>
+            <NotificationContainer/>
             <div className="editProfileWrapper">
                 <div className="editProfileLeft">
                     <label className="fileupload" htmlFor="file">

@@ -3,13 +3,14 @@ const Follow = require("../Models/followModel");
 const {Op} = require("sequelize");
 const bcrypt = require('bcryptjs');
 const blobStorage = require('../utils/blobStorage');
+const { validationResult } = require('express-validator')
 
 exports.signup = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).send({
             status: "failure",
-            message: errors.message
+            message: errors.array()[0].msg
         })
     }
     let {nome, cognome, username, password, email} = req.body;
@@ -71,6 +72,14 @@ exports.signup = async (req, res) => {
 }
 
 exports.signin = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).send({
+            status: "failure",
+            message: errors.array()[0].msg
+        })
+    }
+
     let {password, username} = req.body
 
     let user

@@ -126,16 +126,6 @@ function Topbar() {
                             />
                         </div>
                         <div className="TopbarIconItem">
-                            <img
-                                className="TopbarIcon"
-                                onClick={() => {
-                                    navigate("/messages")
-                                }}
-                                alt=""
-                                src="http://localhost:3000/images/send.png"
-                            />
-                        </div>
-                        <div className="TopbarIconItem">
                             <BsPlusSquareStyled
                                 onClick={() => {
                                     setShowAddPost(true);

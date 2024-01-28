@@ -1,16 +1,21 @@
 const router = require("express").Router()
 const userController = require('../controllers/userController')
 const fileController = require("../controllers/fileController")
-const { check } = require('express-validator/check');
+const { check } = require('express-validator');
 
 router.post('/signup', [
-    check('nome').isString().notEmpty(),
-    check('cognome').isString().notEmpty(),
-    check('username').isString().notEmpty(),
-    check('password').isString().isLength({min: 8}),
-    check('email').isString().isEmail(),
+    check('nome', 'Name cannot be empty.').notEmpty(),
+    check('cognome', 'Cognome cannot be empty.').notEmpty(),
+    check('username', 'Username cannot be empty.').notEmpty(),
+    check('email', 'Email format is example@domain.tld.').isEmail(),
+    check('password', 'Password minimum length is 8.').isString().isLength({min: 8}),
 ], userController.signup);
-router.post('/login', userController.signin);
+
+router.post('/login',[
+    check('username', 'Username cannot be empty.').notEmpty(),
+    check('password', 'Password cannot be empty.').isString().isLength({min: 8}),
+], userController.signin);
+
 router.post('/update', fileController.single('image'), userController.updateUser)
 router.get('/search/:user', userController.searchUser);
 router.get('/u/:user', userController.getUser);

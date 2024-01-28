@@ -1,7 +1,8 @@
 import {useContext, useState} from 'react'
 import { Link, useNavigate } from "react-router-dom"
-import styled from "styled-components"
 import {AuthContext} from "../../context/auth-context"
+import {NotificationContainer, NotificationManager} from 'react-notifications'
+import styled from "styled-components"
 
 function Signup() {
 
@@ -15,28 +16,33 @@ function Signup() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if (!(nome === '' || email === '' || password === '')) {
-            let response = await fetch('http://localhost:8000/api/users/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    nome,
-                    cognome,
-                    username,
-                    password,
-                    email
-                })
+        let response = await fetch('http://localhost:8000/api/users/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                nome,
+                cognome,
+                username,
+                password,
+                email
             })
-            let responseData = await response.json()
-            console.log(responseData.status)
+        })
+        let responseData = await response.json()
+        if(response.status === 200)
             auth.login(responseData.data.user.username)
-        }
+        if(response.status === 403)
+            NotificationManager.error(responseData.message, 'Invalid data error.', 2000)
+        if(response.status === 422)
+            NotificationManager.warning(responseData.message, 'Invalid data warning.', 2000)
+        if(response.status === 500)
+            NotificationManager.error(responseData.message, 'Internal server error.', 2000)
     }
 
     return (
         <SignupContainer>
+            <NotificationContainer/>
             <div className="signupWrapper">
                 <div className="signupRight">
                     <div className="signupRightTop">
@@ -44,8 +50,7 @@ function Signup() {
                             <span className="signupRightTopLogo">instagram</span>
                         </div>
                         <div className="signupRightTopForm">
-                            <form action="frontend/src/components/pages/Signup.jsx" className="signupBox">
-
+                            <form className="signupBox">
                                 <input
                                     onChange={(e) => {
                                         setNome(e.target.value)

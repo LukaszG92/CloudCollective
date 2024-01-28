@@ -2,6 +2,7 @@ import {useState, useEffect, useContext} from 'react';
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from '../../context/auth-context';
 import styled from "styled-components";
+import {NotificationContainer, NotificationManager} from "react-notifications";
 
 function Login() {
     const auth = useContext(AuthContext);
@@ -46,12 +47,19 @@ function Login() {
             })
         })
         let responseData = await response.json();
-        auth.login(responseData.data.username);
-        navigate("/");
+        if(response.status === 200)
+            auth.login(responseData.data.username)
+        if(response.status === 403)
+            NotificationManager.error(responseData.message, 'Invalid data error.', 2000)
+        if(response.status === 422)
+            NotificationManager.warning(responseData.message, 'Invalid data warning.', 2000)
+        if(response.status === 500)
+            NotificationManager.error(responseData.message, 'Internal server error.', 2000)
     };
 
     return (
         <LoginContainer>
+            <NotificationContainer/>
             <div className="loginWrapper">
                 <div className="loginLeft" style={ {
                     backgroundImage: `url(\'http://localhost:3000/images/loginPage.png\')`
