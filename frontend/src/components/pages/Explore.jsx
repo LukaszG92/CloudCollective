@@ -5,6 +5,7 @@ import {AuthContext} from "../../context/auth-context"
 import Modal from "../UI/Modal"
 import Post from "../Post"
 import {NotificationManager} from "react-notifications"
+import NotificationContainer from "react-notifications/lib/NotificationContainer";
 
 function Explore() {
     const auth = useContext( AuthContext)
@@ -32,6 +33,7 @@ function Explore() {
     return(
     <>
         <Topbar/>
+        <NotificationContainer/>
         <PostsContainer>
             {showPost && (
                 <Modal onClose={() => setShowPosts(false)}>

@@ -1,8 +1,9 @@
 import styled from "styled-components"
-import {useContext, useEffect, useState} from "react"
+import React, {useContext, useEffect, useState} from "react"
 import RightbarUser from './RightbarUser'
 import { AuthContext} from "../../context/auth-context"
 import {NotificationManager} from "react-notifications"
+import NotificationContainer from "react-notifications/lib/NotificationContainer";
 
 function Rightbar() {
     const [Followings, setFollowings] = useState([])
@@ -22,6 +23,7 @@ function Rightbar() {
 
     return (
     <RightbarContainer>
+        <NotificationContainer/>
         <div className="rightbarWrapper">
             <span className="rightbarFollowingTitle">Followings</span>
             <div className="rightbarFollowings">

@@ -3,6 +3,7 @@ import Post from './Post'
 import {useState, useRef, useEffect, useContext} from "react"
 import { AuthContext } from "../context/auth-context"
 import {NotificationManager} from "react-notifications"
+import NotificationContainer from "react-notifications/lib/NotificationContainer";
 
 function Feed() {
     const auth = useContext(AuthContext)
@@ -40,6 +41,7 @@ function Feed() {
     return(
         <>
             <FeedContainer>
+                <NotificationContainer/>
                 <div onScroll={onScroll} className="FeedWrapper">
                     {Posts.map((post) => (
                         <Post

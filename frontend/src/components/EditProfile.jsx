@@ -53,8 +53,10 @@ function EditProfile(props) {
                 formData
         })
         const responseData = await response.json()
-        if(response.status === 200)
+        if(response.status === 200) {
+            NotificationManager.success(responseData.message, 'Operation completed successfully.', 2000)
             props.onClose()
+        }
         if(response.status === 422)
             NotificationManager.warning(responseData.message, 'Invalid data warning.', 2000)
         if(response.status === 500)

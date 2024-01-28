@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom"
 import ProfilePost from "../ProfilePost"
 import {AuthContext} from "../../context/auth-context"
 import {NotificationManager} from "react-notifications"
+import NotificationContainer from "react-notifications/lib/NotificationContainer";
 
 function Profile() {
     const auth = useContext(AuthContext)
@@ -42,8 +43,10 @@ function Profile() {
             })
         })
         let responseData = await response.json()
-        if(response.status === 200)
-            setButtonText(buttonText==="Unfollow"? "Follow" : "Unfollow")
+        if(response.status === 200) {
+            NotificationManager.success(responseData.message, 'Operation completed successfully.', 2000)
+            setButtonText(buttonText === "Unfollow" ? "Follow" : "Unfollow")
+        }
         if(response.status === 500)
             NotificationManager.error(responseData.message, 'Internal server error.', 2000)
 
@@ -103,6 +106,7 @@ function Profile() {
                 </Modal>
             )}
             <Topbar />
+            <NotificationContainer/>
             <ProfileContainer>
                 <div className="profileWrapper">
                     <div className="profilePicture">

@@ -7,6 +7,8 @@ import NotificationContainer from "react-notifications/lib/NotificationContainer
 
 function Share(props) {
     const auth = useContext(AuthContext)
+
+    const [disabled, setDisabled] = useState(false)
     const [file, setFile] = useState(null)
     const [description, setDescription] = useState("")
     const [previewUrl, setPreviewUrl] = useState("")
@@ -27,6 +29,7 @@ function Share(props) {
 
     const shareHandler = async e => {
         e.preventDefault()
+        setDisabled(true)
         let formData = new FormData()
         formData.append('image', file)
         formData.append("description", description)
@@ -38,12 +41,15 @@ function Share(props) {
             body: formData,
         })
         let responseData = await response.json()
-        if(response.status === 200)
+        if(response.status === 200) {
+            NotificationManager.success(responseData.message, 'Operation completed successfully.', 2000)
             props.hideAddPostHandler()
+        }
         if(response.status === 422)
             NotificationManager.warning(responseData.message, 'Invalid data warning.', 2000)
         if(response.status === 500)
             NotificationManager.error(responseData.message, 'Internal server error.', 2000)
+        setDisabled(false)
     }
 
     const pickedHandler = event => {
@@ -91,7 +97,7 @@ function Share(props) {
                             />
                         </label>
                     </div>
-                    <button className="shareButton"> Share </button>
+                    <button className="shareButton" disabled={disabled}> Share </button>
                 </form>
             </div>
         </ShareContainer>

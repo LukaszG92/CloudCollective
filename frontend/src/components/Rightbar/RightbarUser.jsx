@@ -2,6 +2,7 @@ import { useNavigate} from "react-router-dom"
 import React, {useContext, useEffect, useState} from "react"
 import {AuthContext} from "../../context/auth-context"
 import {NotificationManager} from "react-notifications";
+import NotificationContainer from "react-notifications/lib/NotificationContainer";
 
 function RightbarUser(props) {
 
@@ -40,6 +41,7 @@ function RightbarUser(props) {
     }, [props.username])
 
     return (
+        <><NotificationContainer/>
             <div key={user.username} className="rightbarFollowing">
                 <div className="rightbarfollowingLeft"
                      style={{textDecoration: "none", color: "#000000"}}
@@ -57,6 +59,7 @@ function RightbarUser(props) {
                     </button>
                 </div>
             </div>
+        </>
         )
 }
 

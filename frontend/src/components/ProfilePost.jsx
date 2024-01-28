@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react"
 import Modal from "./UI/Modal"
 import Post from "./Post"
 import {NotificationManager} from "react-notifications";
+import NotificationContainer from "react-notifications/lib/NotificationContainer";
 
 function ProfilePost(props) {
 
@@ -30,6 +31,7 @@ function ProfilePost(props) {
 
     return (
     <>
+        <NotificationContainer/>
         {showPost && (
             <Modal onClose={hideShowPostHandler}>
                 <Post

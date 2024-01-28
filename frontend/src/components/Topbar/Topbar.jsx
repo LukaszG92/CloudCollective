@@ -11,6 +11,7 @@ import Backdrop from "../UI/Backdrop"
 import SearchUser from "./SearchUser"
 import { AuthContext } from "../../context/auth-context"
 import {NotificationManager} from "react-notifications";
+import NotificationContainer from "react-notifications/lib/NotificationContainer";
 
 function Topbar() {
     const auth = useContext(AuthContext)
@@ -18,7 +19,7 @@ function Topbar() {
     const [showMenu, setShowMenu] = useState(false)
     const [showAddPost, setShowAddPost] = useState(false)
     const [showSearch, setshowSearch] = useState(false)
-    const [usersSearch, setusersSearch] = useState([])
+    const [usersSearch, setUsersSearch] = useState([])
     const [showBarSearchMobile, setShowBarSearchMobile] = useState(false)
 
     const showBarSearchMobileHandler = () => {
@@ -42,7 +43,7 @@ function Topbar() {
             let response = await fetch("http://localhost:8000/api/users/search/"+e.target.value)
             let responseData = await response.json()
             if(response.status === 200)
-                setusersSearch(responseData.data.users)
+                setUsersSearch(responseData.data.users)
             if(response.status === 500)
                 NotificationManager.error(responseData.message, 'Internal server error.', 2000)
 
@@ -51,6 +52,7 @@ function Topbar() {
 
     return (
         <>
+            <NotificationContainer/>
             {showBarSearchMobile && (
                 <SearchBarMobileContainer>
                     <div className="searchbar">
