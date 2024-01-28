@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import styled from "styled-components"
 import { AiOutlineSearch } from "react-icons/ai"
 import { FiSearch } from "react-icons/fi"
@@ -16,11 +16,26 @@ import NotificationContainer from "react-notifications/lib/NotificationContainer
 function Topbar() {
     const auth = useContext(AuthContext)
     const navigate = useNavigate()
+
+    const [profilePic, setProfilePic] = useState('')
     const [showMenu, setShowMenu] = useState(false)
     const [showAddPost, setShowAddPost] = useState(false)
     const [showSearch, setshowSearch] = useState(false)
     const [usersSearch, setUsersSearch] = useState([])
     const [showBarSearchMobile, setShowBarSearchMobile] = useState(false)
+
+    useEffect( () => {
+        const fetchProfilePic = async () => {
+            const response = await fetch('http://localhost:8000/api/users/u/'+auth.username)
+            const responseData = await response.json()
+            if(response.status === 200)
+                setProfilePic(responseData.data.user.profilePic)
+            if(response.status === 500)
+                NotificationManager.error(responseData.message, 'Internal server error.', 2000)
+        }
+        fetchProfilePic()
+    }, [])
+
 
     const showBarSearchMobileHandler = () => {
         setShowBarSearchMobile(true)
@@ -75,7 +90,7 @@ function Topbar() {
             <TopbarContainer>
                 <div className="TopbarLeft">
                     <Link to="/" style={{ textDecoration: "none" }}>
-                        <span className="Logo">instagram</span>
+                        <span className="Logo">CloudCollective</span>
                     </Link>
                 </div>
                 <div className="TopbarCenter">
@@ -144,7 +159,7 @@ function Topbar() {
                                 setShowMenu(!showMenu)
                             }}
                             alt=""
-                            src="http://localhost:3000/images/defaultavatar.png"
+                            src={profilePic}
                         />
                         {showMenu && (
                             <div className="TopbarMenu">

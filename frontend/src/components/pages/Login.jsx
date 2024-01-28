@@ -76,7 +76,7 @@ function Login() {
                     <div className="loginRightWrapper">
                         <div className="loginRightTop">
                             <div className="loginRightTopTop">
-                                <span className="loginRightTopLogo">instagram</span>
+                                <span className="loginRightTopLogo">CloudCollective</span>
                             </div>
                             <div className="loginRightTopForm">
                                 <form className="loginBox" onSubmit={HandlerLoginForm}>

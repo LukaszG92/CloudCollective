@@ -335,7 +335,10 @@ exports.getUserPost = (req, res) => {
     Post.findAll({
         where:{
             'creatorUsername':userUsername
-        }
+        },
+        order: [
+            ['id', 'DESC']
+        ]
     }).then(result => {
         let posts = [];
         result.forEach(post => {

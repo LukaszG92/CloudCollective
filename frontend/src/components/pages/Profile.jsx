@@ -315,7 +315,7 @@ const ProfilePosts = styled.div`
         width: 100%;
         height: 100%;
         padding: 1%;
-        justify-content: center;
+        
     }
     .profilePostImg {
         max-height: 100%;

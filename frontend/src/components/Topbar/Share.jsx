@@ -11,7 +11,7 @@ function Share(props) {
     const [disabled, setDisabled] = useState(false)
     const [file, setFile] = useState(null)
     const [description, setDescription] = useState("")
-    const [previewUrl, setPreviewUrl] = useState("")
+    const [previewUrl, setPreviewUrl] = useState(null)
 
     const filePickerRef = useRef()
 
@@ -65,11 +65,14 @@ function Share(props) {
             <NotificationContainer/>
             <div className="shareWrapper">
                 <div className="shareTop">
-                    <img
-                        src={previewUrl ? previewUrl : "http://localhost:3000/images/defaultavatar.png"}
-                        alt=""
-                        className="postPreview"
-                    />
+                    { file ?
+                        <img
+                            src={previewUrl}
+                            alt=""
+                            className="postPreview"
+                        /> :
+                        <p>Select a file to upload</p>
+                    }
                 </div>
                 <form className="shareBottom" onSubmit={shareHandler} noValidate={true}>
                     <input
@@ -97,7 +100,9 @@ function Share(props) {
                             />
                         </label>
                     </div>
-                    <button className="shareButton" disabled={disabled}> Share </button>
+                    { file &&
+                        <button className="shareButton" disabled={disabled}> Share </button>
+                    }
                 </form>
             </div>
         </ShareContainer>

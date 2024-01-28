@@ -47,7 +47,7 @@ function Signup() {
                 <div className="signupRight">
                     <div className="signupRightTop">
                         <div className="signupRightTopTop">
-                            <span className="signupRightTopLogo">instagram</span>
+                            <span className="signupRightTopLogo">CloudCollective</span>
                         </div>
                         <div className="signupRightTopForm">
                             <form className="signupBox" onSubmit={handleSubmit}>
