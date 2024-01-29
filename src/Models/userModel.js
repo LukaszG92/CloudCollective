@@ -30,7 +30,7 @@ const User = sequelize.define('user', {
     },
     profilePic: {
         type: DataTypes.STRING,
-        defaultValue: "https://cloudcollective.blob.core.windows.net/images/defaultavatar.png"
+        defaultValue: "https://cloudcollectivestorage.blob.core.windows.net/images/defaultavatar.png"
     },
     interest1: {
         type: DataTypes.STRING,

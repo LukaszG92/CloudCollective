@@ -2,13 +2,13 @@ import Login from './components/pages/Login'
 import Signup from './components/pages/Signup'
 import Home from './components/pages/Home'
 import GlobalStyles from "./components/GlobalStyle";
-import {BrowserRouter, Routes, Route, useNavigate, Navigate} from "react-router-dom";
+import {BrowserRouter, Routes, Route,  Navigate} from "react-router-dom";
 import Profile from "./components/pages/Profile";
 import Explore from "./components/pages/Explore";
 import {useCallback, useEffect, useState} from "react";
 import { AuthContext } from "./context/auth-context"
 
-function App(callback, deps) {
+function App() {
 
     const [username, setUsername] = useState(false);
 

@@ -10,6 +10,7 @@ const sequelize = require('./src/utils/database');
 const User = require('./src/Models/userModel');
 const Post = require('./src/Models/postModel');
 const Comment = require('./src/Models/commentModel');
+const path = require("path");
 
 const app = express();
 
@@ -25,5 +26,10 @@ app.use(bodyParser.json());
 app.use('/api/comments', commentRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/users', userRouter);
+
+app.use(express.static('./frontend/build'));
+app.get( '*' , (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'frontend', 'public', 'index.html'))
+})
 
 app.listen(8000);
