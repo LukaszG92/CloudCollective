@@ -59,4 +59,4 @@ jobs:
           app-name: 'cloud-collective'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_52F9F1C7FC6E4C1494653B70709AD8B9 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C306214F7AD7405E98BF363646048744 }}
