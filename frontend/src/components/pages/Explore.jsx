@@ -4,8 +4,7 @@ import Topbar from "../Topbar/Topbar"
 import {AuthContext} from "../../context/auth-context"
 import Modal from "../UI/Modal"
 import Post from "../Post"
-import {NotificationManager} from "react-notifications"
-import NotificationContainer from "react-notifications/lib/NotificationContainer";
+import {NotificationManager, NotificationContainer } from "react-notifications"
 
 function Explore() {
     const auth = useContext( AuthContext)

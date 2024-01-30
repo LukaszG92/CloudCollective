@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from "react"
 import Modal from "./UI/Modal"
 import Post from "./Post"
-import {NotificationManager} from "react-notifications";
-import NotificationContainer from "react-notifications/lib/NotificationContainer";
+import {NotificationManager, NotificationContainer } from "react-notifications"
 
 function ProfilePost(props) {
 

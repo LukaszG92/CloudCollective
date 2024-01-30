@@ -28,8 +28,8 @@ app.use('/api/posts', postRouter);
 app.use('/api/users', userRouter);
 
 app.use(express.static(path.resolve(__dirname,'frontend', 'build')));
-app.get( '*' , (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'frontend', 'public', 'index.html'))
+app.get( '/*' , (req, res) => {
+    res.sendFile(path.resolve(__dirname,'frontend', 'build', 'index.html'))
 })
 
 console.log(path.resolve(__dirname, 'frontend', 'public', 'index.html'))

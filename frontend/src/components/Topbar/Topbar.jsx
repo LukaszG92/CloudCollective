@@ -10,8 +10,7 @@ import Share from "./Share"
 import Backdrop from "../UI/Backdrop"
 import SearchUser from "./SearchUser"
 import { AuthContext } from "../../context/auth-context"
-import {NotificationManager} from "react-notifications";
-import NotificationContainer from "react-notifications/lib/NotificationContainer";
+import {NotificationManager, NotificationContainer } from "react-notifications"
 
 function Topbar() {
     const auth = useContext(AuthContext)
@@ -132,7 +131,7 @@ function Topbar() {
                                     navigate("/")
                                 }}
                                 alt=""
-                                src="http://localhost:3000/images/home.png"
+                                src="http://localhost:8000/images/home.png"
                             />
                         </div>
                         <div className="TopbarIconItem">
@@ -142,7 +141,7 @@ function Topbar() {
                                     navigate("/explore", { state: {'username':'username'} })
                                 }}
                                 alt=""
-                                src="http://localhost:3000/images/explore.png"
+                                src="http://localhost:8000/images/explore.png"
                             />
                         </div>
                         <div className="TopbarIconItem">

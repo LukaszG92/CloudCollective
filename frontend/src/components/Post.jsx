@@ -6,8 +6,7 @@ import React, {useContext, useEffect, useState} from "react"
 import {AuthContext} from "../context/auth-context"
 import Modal from "./UI/Modal"
 import EditPost from "./EditPost"
-import {NotificationManager} from "react-notifications"
-import NotificationContainer from "react-notifications/lib/NotificationContainer"
+import {NotificationManager, NotificationContainer } from "react-notifications"
 
 export default function Post( props ) {
     const auth = useContext(AuthContext)

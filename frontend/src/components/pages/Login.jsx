@@ -27,7 +27,7 @@ function Login() {
 
     useEffect(() => {
         const setImg = async () => {
-            const imgUrl =`http://localhost:3000/images/loginpage${show1}.png`
+            const imgUrl =`http://localhost:8000/images/loginpage${show1}.png`
             setLoginPageImg(imgUrl)
         }
         setImg()
@@ -152,7 +152,7 @@ const LoginContainer = styled.div`
         position: relative;
         width: 100%;
         height: 600px;
-        background-image: url("http://localhost:3000/images/loginPage.png");
+        background-image: url("http://localhost:8000/images/loginPage.png");
         min-width: 460px;
         background-repeat: no-repeat;
         background-position: right 2px;

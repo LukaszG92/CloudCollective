@@ -1,8 +1,8 @@
 import { useNavigate} from "react-router-dom"
 import React, {useContext, useEffect, useState} from "react"
 import {AuthContext} from "../../context/auth-context"
-import {NotificationManager} from "react-notifications";
-import NotificationContainer from "react-notifications/lib/NotificationContainer";
+import {NotificationManager, NotificationContainer } from "react-notifications"
+
 
 function RightbarUser(props) {
 

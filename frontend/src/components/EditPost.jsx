@@ -1,7 +1,6 @@
 import styled from "styled-components"
 import { useState} from "react"
-import {NotificationManager} from "react-notifications"
-import NotificationContainer from "react-notifications/lib/NotificationContainer"
+import {NotificationManager, NotificationContainer } from "react-notifications"
 
 function EditPost(props) {
 

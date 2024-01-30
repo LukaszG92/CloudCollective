@@ -6,8 +6,7 @@ import Modal from "../UI/Modal"
 import { useParams } from "react-router-dom"
 import ProfilePost from "../ProfilePost"
 import {AuthContext} from "../../context/auth-context"
-import {NotificationManager} from "react-notifications"
-import NotificationContainer from "react-notifications/lib/NotificationContainer";
+import {NotificationManager, NotificationContainer } from "react-notifications"
 
 function Profile() {
     const auth = useContext(AuthContext)

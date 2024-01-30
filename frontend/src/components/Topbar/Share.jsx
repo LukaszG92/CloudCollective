@@ -2,8 +2,7 @@ import {useContext, useState, useRef, useEffect} from "react"
 import styled from "styled-components"
 import { MdPermMedia } from "react-icons/md"
 import {AuthContext} from "../../context/auth-context"
-import {NotificationManager} from "react-notifications"
-import NotificationContainer from "react-notifications/lib/NotificationContainer"
+import {NotificationManager, NotificationContainer } from "react-notifications"
 
 function Share(props) {
     const auth = useContext(AuthContext)

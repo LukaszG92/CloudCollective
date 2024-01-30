@@ -2,8 +2,7 @@ import styled from "styled-components"
 import Post from './Post'
 import {useState, useRef, useEffect, useContext} from "react"
 import { AuthContext } from "../context/auth-context"
-import {NotificationManager} from "react-notifications"
-import NotificationContainer from "react-notifications/lib/NotificationContainer";
+import {NotificationManager, NotificationContainer } from "react-notifications"
 
 function Feed() {
     const auth = useContext(AuthContext)
