@@ -14,7 +14,7 @@ function Explore() {
 
     useEffect(() => {
         const fetchPost = async () => {
-            const response = await fetch('http://localhost:8000/api/posts/explore', {
+            const response = await fetch(`${process.env.BASE_URL}/api/posts/explore`, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: auth.username,

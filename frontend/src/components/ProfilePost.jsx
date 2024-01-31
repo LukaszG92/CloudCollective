@@ -18,7 +18,7 @@ function ProfilePost(props) {
 
     useEffect(() => {
         const fetchPost = async () => {
-            const response = await fetch('http://localhost:8000/api/posts/p/'+props.postId)
+            const response = await fetch(`${process.env.BASE_URL}/api/posts/p/${props.postId}`)
             const responseData = await response.json()
             if(response.status === 200)
                 setPost(responseData.data.post)

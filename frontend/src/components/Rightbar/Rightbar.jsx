@@ -11,7 +11,7 @@ function Rightbar() {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const response = await fetch('http://localhost:8000/api/users/'+auth.username+'/followings')
+            const response = await fetch(`${process.env.BASE_URL}/api/users/${auth.username}/followings`)
             const responseData = await response.json()
             if(response.status === 200)
                 setFollowings(responseData.data.followings)

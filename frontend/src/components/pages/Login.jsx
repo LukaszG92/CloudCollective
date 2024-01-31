@@ -27,7 +27,7 @@ function Login() {
 
     useEffect(() => {
         const setImg = async () => {
-            const imgUrl =`http://localhost:8000/images/loginpage${show1}.png`
+            const imgUrl =`${process.env.BASE_URL}/images/loginpage${show1}.png`
             setLoginPageImg(imgUrl)
         }
         setImg()
@@ -36,7 +36,7 @@ function Login() {
 
     const HandlerLoginForm = async (e) => {
         e.preventDefault()
-        let response = await fetch('http://localhost:8000/api/users/login', {
+        let response = await fetch(`${process.env.BASE_URL}/api/users/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ function Login() {
             <NotificationContainer/>
             <div className="loginWrapper">
                 <div className="loginLeft" style={ {
-                    backgroundImage: `url(\'http://localhost:3000/images/loginPage.png\')`
+                    backgroundImage: `url(\'${process.env.BASE_URL}/images/loginPage.png\')`
                 }}>
                     <div className="frontImgWrapper">
                         <img
@@ -152,7 +152,6 @@ const LoginContainer = styled.div`
         position: relative;
         width: 100%;
         height: 600px;
-        background-image: url("http://localhost:8000/images/loginPage.png");
         min-width: 460px;
         background-repeat: no-repeat;
         background-position: right 2px;

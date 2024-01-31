@@ -44,7 +44,7 @@ function EditProfile(props) {
         formData.append('profilePic', props.user.profilePic)
         if(file)
             formData.append('image', file)
-        const response = await fetch('http://localhost:8000/api/users/update', {
+        const response = await fetch(`${process.env.BASE_URL}/api/users/update`, {
             method: 'POST',
             headers: {
                 Authorization: auth.username,

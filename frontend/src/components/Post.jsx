@@ -23,7 +23,7 @@ export default function Post( props ) {
     const [profilePic, setProfilePic] = useState("")
 
     const addCommentHandler = async () => {
-        let response = await fetch("http://localhost:8000/api/comments/"+post.id+"/new", {
+        let response = await fetch(`${process.env.BASE_URL}/api/comments/${post.id}/new`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ export default function Post( props ) {
     }
 
     const likeHandler = async () => {
-        let response = await fetch("http://localhost:8000/api/posts/"+post.id+"/like", {
+        let response = await fetch(`${process.env.BASE_URL}/api/posts/${post.id}/like`, {
             headers: {
                 Authorization: auth.username
             }
@@ -64,7 +64,7 @@ export default function Post( props ) {
     }
 
     const deletePostHandler = async () => {
-        let response = await fetch("http://localhost:8000/api/posts/"+post.id, {
+        let response = await fetch(`${process.env.BASE_URL}/api/posts/${post.id}`, {
             method: 'DELETE'
         })
         let responseData = await response.json()
@@ -76,7 +76,7 @@ export default function Post( props ) {
 
     useEffect(() => {
         const fetchProfilePic = async () => {
-            const response = await fetch('http://localhost:8000/api/users/u/'+post.creatorUsername)
+            const response = await fetch(`${process.env.BASE_URL}/api/users/u/${post.creatorUsername}`)
             const responseData = await response.json()
             if(response.status === 200)
                 setProfilePic(responseData.data.user.profilePic)
@@ -88,7 +88,7 @@ export default function Post( props ) {
 
     useEffect(() => {
         const fetchPostLikes = async () => {
-            let response = await fetch('http://localhost:8000/api/posts/' + post.id + '/likes')
+            let response = await fetch(`${process.env.BASE_URL}/api/posts/${post.id}/likes`)
             let responseData = await response.json()
             if(response.status === 200)
                 setLikes(responseData.data.likes)
@@ -107,7 +107,7 @@ export default function Post( props ) {
 
     useEffect( () =>{
         const fetchComments = async () => {
-            let response = await fetch(`http://localhost:8000/api/comments/${post.id}`)
+            let response = await fetch(`${process.env.BASE_URL}/api/comments/${post.id}`)
             let responseData = await response.json()
             if(response.status === 200)
                 setComments(responseData.data.comments)
@@ -216,7 +216,7 @@ export default function Post( props ) {
                 <div className="postBottomLeft" onClick={() => {setShowPost(true)}}>
                     <img
                          className="commentIcon"
-                         src='http://localhost:3000/images/comment.png'
+                         src={`${process.env.BASE_URL}/images/comment.png`}
                          alt=''
                     />
                     <span className="postLikeCounter">

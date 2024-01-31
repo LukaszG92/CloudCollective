@@ -32,7 +32,7 @@ function Profile() {
 
     const followHandler = async (e) => {
         e.preventDefault()
-        let response = await fetch("http://localhost:8000/api/users/follow/" + userData.username, {
+        let response = await fetch(`${process.env.BASE_URL}api/users/follow/${userData.username}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ function Profile() {
 
     useEffect(() => {
         const fetchUserData = async () => {
-            const response = await fetch('http://localhost:8000/api/users/u/'+username)
+            const response = await fetch(`${process.env.BASE_URL}/api/users/u/${username}`)
             const responseData = await response.json()
             if(response.status === 200)
                 setUserData(responseData.data.user)
@@ -62,7 +62,7 @@ function Profile() {
         }
         fetchUserData()
         const fetchPost = async () => {
-            const response = await fetch('http://localhost:8000/api/posts/u/'+username)
+            const response = await fetch(`${process.env.BASE_URL}/api/posts/u/${username}`)
             const responseData = await response.json()
             if(response.status === 200)
                 setPosts(responseData.data.posts)
@@ -71,7 +71,7 @@ function Profile() {
         }
         fetchPost()
         const fetchFollowing = async () => {
-            const response = await fetch('http://localhost:8000/api/users/'+username+'/followings')
+            const response = await fetch(`${process.env.BASE_URL}/api/users/${username}/followings`)
             const responseData = await response.json()
             if(response.status === 200)
                 setFollowing(responseData.data.followings)
@@ -80,7 +80,7 @@ function Profile() {
         }
         fetchFollowing()
         const fetchFollower = async () => {
-            const response = await fetch('http://localhost:8000/api/users/'+username+'/followers')
+            const response = await fetch(`${process.env.BASE_URL}/api/users/${username}/followers`)
             const responseData = await response.json()
             if(response.status === 200) {
                 setFollower(responseData.data.followers)

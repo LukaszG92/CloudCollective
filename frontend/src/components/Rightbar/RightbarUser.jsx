@@ -12,7 +12,7 @@ function RightbarUser(props) {
 
     const unfollowHandler = async (e) => {
         e.preventDefault()
-        let response = await fetch("http://localhost:8000/api/users/follow/" + user.username, {
+        let response = await fetch(`${process.env.BASE_URL}/api/users/follow/${user.username}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ function RightbarUser(props) {
 
     useEffect(() => {
         const fetchUserData = async () => {
-            const response = await fetch('http://localhost:8000/api/users/u/'+props.username)
+            const response = await fetch(`${process.env.BASE_URL}/api/users/u/${props.username}`)
             const responseData = await response.json()
             if(response.status === 200)
                 setUser(responseData.data.user)

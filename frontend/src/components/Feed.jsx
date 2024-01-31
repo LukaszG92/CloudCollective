@@ -12,7 +12,7 @@ function Feed() {
 
     useEffect(() => {
         const fetchPost = async () => {
-            const response = await fetch('http://localhost:8000/api/posts/feed', {
+            const response = await fetch(`${process.env.BASE_URL}/api/posts/feed`, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: auth.username,
