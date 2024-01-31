@@ -34,4 +34,4 @@ app.get( '/*' , (req, res) => {
 
 console.log(path.resolve(__dirname, 'frontend', 'public', 'index.html'))
 
-app.listen(8080);
+app.listen(8000);
