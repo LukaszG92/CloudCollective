@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "cd ./frontend && npm run build",
     "start": "node App.js"
   },
   "author": "",
