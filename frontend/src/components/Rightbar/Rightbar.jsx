@@ -19,7 +19,7 @@ function Rightbar() {
                 NotificationManager.error(responseData.message, 'Internal server error.', 2000)
         }
         fetchUsers()
-    }, [])
+    }, [auth.username])
 
     return (
     <RightbarContainer>

@@ -26,7 +26,7 @@ function ProfilePost(props) {
                 NotificationManager.error(responseData.message, 'Internal server error.', 2000)
         }
         fetchPost()
-    }, [])
+    }, [props.postId])
 
     return (
     <>

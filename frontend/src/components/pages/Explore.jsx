@@ -27,7 +27,7 @@ function Explore() {
                 NotificationManager.error(responseData.message, 'Internal server error.', 2000)
         }
         fetchPost()
-    }, [])
+    }, [auth.username])
 
     return(
     <>

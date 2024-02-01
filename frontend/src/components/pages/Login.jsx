@@ -62,7 +62,7 @@ function Login() {
             <NotificationContainer/>
             <div className="loginWrapper">
                 <div className="loginLeft" style={ {
-                    backgroundImage: `url(\'${process.env.BASE_URL}/images/loginPage.png\')`
+                    backgroundImage: `url('${process.env.BASE_URL}/images/loginPage.png')`
                 }}>
                     <div className="frontImgWrapper">
                         <img

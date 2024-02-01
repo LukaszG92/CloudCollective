@@ -33,7 +33,7 @@ function Topbar() {
                 NotificationManager.error(responseData.message, 'Internal server error.', 2000)
         }
         fetchProfilePic()
-    }, [])
+    }, [auth.username])
 
 
     const showBarSearchMobileHandler = () => {

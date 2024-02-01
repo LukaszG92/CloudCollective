@@ -84,7 +84,7 @@ export default function Post( props ) {
                 NotificationManager.error(responseData.message, 'Internal server error.', 2000)
         }
         fetchProfilePic()
-    }, [])
+    }, [post.creatorUsername])
 
     useEffect(() => {
         const fetchPostLikes = async () => {
@@ -96,14 +96,14 @@ export default function Post( props ) {
                 NotificationManager.error(responseData.message, 'Internal server error.', 2000)
         }
         fetchPostLikes()
-    }, [isLiked])
+    }, [isLiked, post.id])
 
     useEffect(() => {
         const getIsLiked = () => {
             setIsLiked(likes.includes(auth.username))
         }
         getIsLiked()
-    }, [likes])
+    }, [likes, auth.username])
 
     useEffect( () =>{
         const fetchComments = async () => {
@@ -116,7 +116,7 @@ export default function Post( props ) {
 
         }
         fetchComments()
-    }, [showPost])
+    }, [showPost, post.id])
 
     return (
         <PostContainer>

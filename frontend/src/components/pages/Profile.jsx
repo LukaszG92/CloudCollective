@@ -94,7 +94,7 @@ function Profile() {
 
         }
         fetchFollower()
-    }, [username, editedProfile, buttonText])
+    }, [username, editedProfile, buttonText, auth.username])
 
     return (
         <>
