@@ -6,8 +6,5 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
-./backend/node_modules
-./backend/.env
-./backend/package-lock.json
-./frontend/node_modules
-./frontend/package-lock.json
+./node_modules
+./package-lock.json
