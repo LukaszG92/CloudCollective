@@ -16,7 +16,7 @@ function Signup() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        let response = await fetch(`${process.env.BASE_URL}/api/users/signup`, {
+        let response = await fetch(`/api/users/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

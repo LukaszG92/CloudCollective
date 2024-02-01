@@ -32,7 +32,7 @@ function Share(props) {
         let formData = new FormData()
         formData.append('image', file)
         formData.append("description", description)
-        let response = await fetch(`${process.env.BASE_URL}/api/posts/new`, {
+        let response = await fetch(`/api/posts/new`, {
             method:'POST',
             headers: {
                 Authorization: auth.username,

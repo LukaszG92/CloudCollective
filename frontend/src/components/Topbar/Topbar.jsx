@@ -25,7 +25,7 @@ function Topbar() {
 
     useEffect( () => {
         const fetchProfilePic = async () => {
-            const response = await fetch(`${process.env.BASE_URL}/api/users/u/${auth.username}`)
+            const response = await fetch(`/api/users/u/${auth.username}`)
             const responseData = await response.json()
             if(response.status === 200)
                 setProfilePic(responseData.data.user.profilePic)
@@ -54,7 +54,7 @@ function Topbar() {
             setshowSearch(false)
         } else {
             setshowSearch(true)
-            let response = await fetch(`${process.env.BASE_URL}/api/users/search/${e.target.value}`)
+            let response = await fetch(`/api/users/search/${e.target.value}`)
             let responseData = await response.json()
             if(response.status === 200)
                 setUsersSearch(responseData.data.users)
@@ -131,7 +131,7 @@ function Topbar() {
                                     navigate("/")
                                 }}
                                 alt=""
-                                src={`${process.env.BASE_URL}/images/home.png`}
+                                src={`/images/home.png`}
                             />
                         </div>
                         <div className="TopbarIconItem">
@@ -141,7 +141,7 @@ function Topbar() {
                                     navigate("/explore")
                                 }}
                                 alt=""
-                                src={`${process.env.BASE_URL}/images/explore.png`}
+                                src={`/images/explore.png`}
                             />
                         </div>
                         <div className="TopbarIconItem">

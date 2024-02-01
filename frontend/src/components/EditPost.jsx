@@ -8,7 +8,7 @@ function EditPost(props) {
 
     const editPostHandler = async (e) => {
         e.preventDefault()
-        const response = await fetch(`${process.env.BASE_URL}/api/posts/${props.post.id}`, {
+        const response = await fetch(`/api/posts/${props.post.id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
