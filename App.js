@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const port = process.env.PORT || 3000
 
 const commentRouter = require('./src/routes/commentRoute');
 const postRouter = require('./src/routes/postRoute');
@@ -34,4 +35,4 @@ app.get( '/*' , (req, res) => {
 
 console.log(path.resolve(__dirname, 'frontend', 'public', 'index.html'))
 
-app.listen(8000);
+app.listen(port);
