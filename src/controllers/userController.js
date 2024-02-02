@@ -8,6 +8,7 @@ const { validationResult } = require('express-validator')
 exports.signup = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+        console.log(errors.array()[0].msg)
         return res.status(422).send({
             status: "failure",
             message: errors.array()[0].msg
@@ -76,6 +77,7 @@ exports.signup = async (req, res) => {
 exports.signin = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+        console.log(errors.array()[0].msg)
         return res.status(422).send({
             status: "failure",
             message: errors.array()[0].msg
@@ -135,6 +137,7 @@ exports.signin = async (req, res) => {
 exports.updateUser = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+        console.log(errors.array()[0].msg)
         return res.status(422).send({
             status: "failure",
             message: errors.array()[0].msg
@@ -341,6 +344,7 @@ exports.getFollowing = async (req, res) => {
 exports.follow = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+        console.log(errors.array()[0].msg)
         return res.status(422).send({
             status: "failure",
             message: errors.array()[0].msg

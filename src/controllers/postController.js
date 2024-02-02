@@ -11,6 +11,7 @@ const {validationResult} = require("express-validator");
 exports.createPost = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+        console.log(errors.array()[0].msg)
         return res.status(422).send({
             status: "failure",
             message: errors.array()[0].msg
@@ -62,6 +63,7 @@ exports.createPost = async (req, res) => {
 exports.updatePost = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+        console.log(errors.array()[0].msg)
         return res.status(422).send({
             status: "failure",
             message: errors.array()[0].msg
