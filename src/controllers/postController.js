@@ -26,6 +26,7 @@ exports.createPost = async (req, res) => {
         try {
             topic = await computerVision(req.file.url)
         } catch (err) {
+            console.log(err)
             return res.status(500).send({
                 status: "failure",
                 message: "Cannot create a post now, try again."
@@ -42,6 +43,7 @@ exports.createPost = async (req, res) => {
             'topic': topic
         })
     } catch (err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot create a post now, try again."
@@ -77,6 +79,7 @@ exports.updatePost = async (req, res) => {
             }
         })
     } catch (err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot update the post now, try again."
@@ -89,6 +92,7 @@ exports.updatePost = async (req, res) => {
             'description': description
         })
     } catch (err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot update the post now, try again."
@@ -114,6 +118,7 @@ exports.deletePost = async (req, res) => {
             }
         })
     } catch(err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot delete the post now, try again."
@@ -121,6 +126,7 @@ exports.deletePost = async (req, res) => {
     }
 
     if(!post) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot delete the post now, try again."
@@ -130,6 +136,7 @@ exports.deletePost = async (req, res) => {
     try{
         post.destroy()
     } catch(err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot delete the post now, try again."
@@ -153,6 +160,7 @@ exports.findPost = async (req, res) => {
             }
         })
     } catch(err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot find the post now, try again."
@@ -162,6 +170,7 @@ exports.findPost = async (req, res) => {
     try{
         post['image'] = blobStorage(post['image'])
     } catch(err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot find the post now, try again."
@@ -188,6 +197,7 @@ exports.feed = async (req, res) => {
             }
         })
     } catch (err){
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot get the feed now, try again."
@@ -231,6 +241,7 @@ exports.feed = async (req, res) => {
         try {
             post.image = blobStorage(post.image)
         } catch (err){
+            console.log(err)
             return res.status(500).send({
                 status: "failure",
                 message: "Cannot get the explore now, try again."
@@ -258,6 +269,7 @@ exports.explore = async (req, res) => {
             }
         })
     } catch (err){
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot get the explore now, try again."
@@ -273,6 +285,7 @@ exports.explore = async (req, res) => {
              FROM likes
              WHERE userLike = '${userUsername}'`)
     } catch (err){
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot get the explore now, try again."
@@ -303,6 +316,7 @@ exports.explore = async (req, res) => {
             ]
         })
     } catch (err){
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot get the explore now, try again."
@@ -314,6 +328,7 @@ exports.explore = async (req, res) => {
             post.image = blobStorage(post.image)
             console.log(post.image)
         } catch (err){
+            console.log(err)
             return res.status(500).send({
                 status: "failure",
                 message: "Cannot get the explore now, try again."

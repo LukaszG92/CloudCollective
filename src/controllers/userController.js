@@ -23,7 +23,7 @@ exports.signup = async (req, res) => {
             }
         });
     } catch (err) {
-        console.log(existingUser)
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot create an user now, try again."
@@ -40,6 +40,7 @@ exports.signup = async (req, res) => {
     try {
         hashedPassword = await bcrypt.hash(password, 12);
     } catch (err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot create an user now, try again."
@@ -56,6 +57,7 @@ exports.signup = async (req, res) => {
             'email': email,
         })
     } catch (err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot create an user now, try again."
@@ -90,6 +92,7 @@ exports.signin = async (req, res) => {
             }
         })
     } catch (err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot login now, try again."
@@ -107,6 +110,7 @@ exports.signin = async (req, res) => {
     try {
         isValidPassword = await bcrypt.compare(password, user.password);
     } catch (err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot login now, try again."
@@ -154,6 +158,7 @@ exports.updateUser = async (req, res) => {
             }
         })
     } catch (err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot update user data now, try again."
@@ -170,6 +175,7 @@ exports.updateUser = async (req, res) => {
             'profilePic': url
         })
     }  catch (err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot update user data now, try again."
@@ -199,6 +205,7 @@ exports.searchUser = async (req, res) => {
             ]
         })
     } catch (err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot find users now, try again.",
@@ -209,6 +216,7 @@ exports.searchUser = async (req, res) => {
         try {
             user['profilePic'] = blobStorage(user['profilePic'])
         } catch (err) {
+            console.log(err)
             return res.status(500).send({
                 status: "failure",
                 message: "Cannot find user now, try again.",
@@ -237,6 +245,7 @@ exports.getUser = async (req, res) => {
             }
         })
     } catch (err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot find user now, try again.",
@@ -246,6 +255,7 @@ exports.getUser = async (req, res) => {
     try {
         user['profilePic'] = blobStorage(user['profilePic'])
     } catch (err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot find user now, try again.",
@@ -274,6 +284,7 @@ exports.getFollowers = async (req, res) => {
             }
         })
     } catch (err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot find followings now, try again.",
@@ -306,6 +317,7 @@ exports.getFollowing = async (req, res) => {
             }
         })
     } catch (err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot find followings now, try again.",
@@ -347,6 +359,7 @@ exports.follow = async (req, res) => {
             }
         })
     } catch (err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot follow the user now, try again."
@@ -360,6 +373,7 @@ exports.follow = async (req, res) => {
                 'following': following
             })
         } catch (err) {
+            console.log(err)
             return res.status(500).send({
                 status: "failure",
                 message: "Cannot follow the user now, try again."
@@ -380,6 +394,7 @@ exports.follow = async (req, res) => {
                 }
             })
         } catch (err) {
+            console.log(err)
             return res.status(500).send({
                 status: "failure",
                 message: "Cannot unfollow the user now, try again."

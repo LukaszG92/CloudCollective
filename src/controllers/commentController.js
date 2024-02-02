@@ -26,6 +26,7 @@ exports.createComment = async (req, res) => {
             'postId' : postId
         })
     } catch (err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot create an user now, try again."
@@ -54,6 +55,7 @@ exports.getPostComments = async (req, res) => {
             ]
         })
     } catch (err) {
+        console.log(err)
         return res.status(500).send({
             status: "failure",
             message: "Cannot retrieve comments now, try again."
