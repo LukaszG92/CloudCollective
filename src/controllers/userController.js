@@ -351,7 +351,7 @@ exports.follow = async (req, res) => {
         })
     }
 
-    let follower = req.body.user;
+    let follower = req.headers.authorization;
     let following = req.params.user;
 
     let exists

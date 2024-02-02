@@ -33,13 +33,9 @@ function Profile() {
     const followHandler = async (e) => {
         e.preventDefault()
         let response = await fetch(`/api/users/follow/${userData.username}`, {
-            method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                user: auth.username,
-            })
+                Authorization: auth.username,
+            }
         })
         let responseData = await response.json()
         if(response.status === 200) {

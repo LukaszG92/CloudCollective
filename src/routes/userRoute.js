@@ -27,8 +27,6 @@ router.get('/u/:user', userController.getUser);
 router.get('/:user/followers', userController.getFollowers);
 router.get('/:user/followings', userController.getFollowing);
 
-router.post('/follow/:user',[
-    check('follower', 'Invalid user to follow.').notEmpty(),
-], userController.follow);
+router.get('/follow/:user', userController.follow);
 
 module.exports = router;
