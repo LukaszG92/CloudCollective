@@ -17,12 +17,12 @@ const sharedKeyCredential = new StorageSharedKeyCredential(
 const getBlobSas = (blobName) => {
 
     const sasOptions = {
-        services: AccountSASServices.parse("b").toString(),                     // blobs
-        resourceTypes: AccountSASResourceTypes.parse("o").toString(),    // service, container, object
-        permissions: AccountSASPermissions.parse("r"),               // permissions
+        services: AccountSASServices.parse("b").toString(),
+        resourceTypes: AccountSASResourceTypes.parse("o").toString(),
+        permissions: AccountSASPermissions.parse("r"),
         protocol: SASProtocol.Https,
         startsOn: new Date(),
-        expiresOn: new Date(new Date().valueOf() + (60 * 1000)),              // 2 minutes
+        expiresOn: new Date(new Date().valueOf() + (60 * 1000)),
     };
 
     let sasToken = generateAccountSASQueryParameters(
