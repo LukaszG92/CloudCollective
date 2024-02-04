@@ -18,11 +18,11 @@ const getBlobSas = (blobName) => {
 
     const sasOptions = {
         services: AccountSASServices.parse("b").toString(),                     // blobs
-        resourceTypes: AccountSASResourceTypes.parse("sco").toString(),    // service, container, object
-        permissions: AccountSASPermissions.parse("rwdlacupi"),               // permissions
+        resourceTypes: AccountSASResourceTypes.parse("o").toString(),    // service, container, object
+        permissions: AccountSASPermissions.parse("r"),               // permissions
         protocol: SASProtocol.Https,
         startsOn: new Date(),
-        expiresOn: new Date(new Date().valueOf() + (2 * 60 * 1000)),              // 2 minutes
+        expiresOn: new Date(new Date().valueOf() + (60 * 1000)),              // 2 minutes
     };
 
     let sasToken = generateAccountSASQueryParameters(
