@@ -10,7 +10,7 @@ const sequelize = new Sequelize(process.env.DB, process.env.DB_USER, process.env
   dialectOptions: {
     ssl: {
       rejectUnauthorized: true,
-      ca: fs.readFileSync(path.resolve(__dirname, '..', 'DigiCertGlobalRootG2.crt.pem')).toString()
+      ca: fs.readFileSync(path.resolve(__dirname, '..', 'DigiCertGlobalRootCA.crt.pem')).toString()
     }
   }
 });

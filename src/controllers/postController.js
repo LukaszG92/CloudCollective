@@ -408,35 +408,51 @@ exports.likePost = (req, res) => {
 }
 
 const setUserInterest = async (userUsername) => {
-    let interest1= null;
-    let interest2= null;
-    let interest3 = null;
-    sequelize.query(`SELECT posts.topic, COUNT(*) as likesCount FROM likes JOIN posts ON likes.postId = posts.id WHERE userLike = '${userUsername}' AND posts.topic IS NOT NULL GROUP BY posts.topic ORDER BY likesCount DESC`)
-        .then(result => {
-            if (result[0].length === 1) {
-                interest1 = result[0][0]['topic'];
+    let interest1, interest2, interest3 = null;
+    let result
+    try {
+        result = sequelize.query(`SELECT posts.topic, COUNT(*) as likesCount
+                                  FROM likes JOIN posts ON likes.postId = posts.id
+                                  WHERE userLike = '${userUsername}' AND posts.topic IS NOT NULL
+                                  GROUP BY posts.topic
+                                  ORDER BY likesCount DESC`)
+    } catch (err){
+        console.log(err)
+        return 1
+    }
+    if (result[0].length === 1)
+        interest1 = result[0][0]['topic'];
+    if (result[0].length === 2) {
+        interest1 = result[0][0]['topic'];
+        interest2 = result[0][1]['topic'];
+    }
+    if (result[0].length > 3) {
+        interest1 = result[0][0]['topic'];
+        interest2 = result[0][1]['topic'];
+        interest3 = result[0][2]['topic'];
+    }
+    let user
+    try {
+        user = await User.findOne({
+            where: {
+                'username': userUsername
             }
-            if (result[0].length === 2) {
-                interest1 = result[0][0]['topic'];
-                interest2 = result[0][1]['topic'];
-            }
-            if (result[0].length > 3) {
-                interest1 = result[0][0]['topic'];
-                interest2 = result[0][1]['topic'];
-                interest3 = result[0][2]['topic'];
-            }
-            User.findOne({
-                where: {
-                    'username': userUsername
-                }
-            }).then(user => {
-                user.update({
-                    'interest1': interest1,
-                    'interest2': interest2,
-                    'interest3': interest3
-                })
-            })
         })
+    } catch (err){
+        console.log(err)
+        return 1
+    }
+    try {
+        user.update({
+            'interest1': interest1,
+            'interest2': interest2,
+            'interest3': interest3
+        })
+    } catch (err){
+        console.log(err)
+        return 1
+    }
+    return 0
 }
 
 exports.getPostLikes = (req, res) => {

@@ -10,11 +10,10 @@ const MIME_TYPE_MAP = {
 
 const resolveBlobName = (req, file) => {
     return new Promise((resolve, reject) => {
-        const blobName = `${Date.now()}-${file.originalname}.${MIME_TYPE_MAP[file.mimetype]}`
+        const blobName = `${Date.now()}-${file.originalname}`
         resolve(blobName)
     })
 }
-
 
 const azureStorage = new MulterAzureStorage({
     connectionString: process.env.BLOB_ACCOUNT_STRING,
