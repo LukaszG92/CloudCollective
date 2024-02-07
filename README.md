@@ -51,6 +51,21 @@ And at last deploy the webapp with **GitHub Actions**
  ```bash
 az webapp deployment github-actions add --repo LukaszG92/CloudCollective --branch main --resource-group <resource-group-name> --name <app-name> --runtime "NODE:20-lts" --login-with-github
 ```
+To make the deployment work correctly we need to configure the following **environment variables**.
+To do this we need to access the Azure portal, open our webapp and go to the Environment Variables tab, in the Settings tab
+![Screenshot 2024-02-07 alle 09 46 51](https://github.com/LukaszG92/CloudCollective/assets/128072825/2827a6ba-3723-4e2f-ab11-753073f8f142)
+Specifically, environment variables represent:
+ ```bash
+DB = <name-of-the-db>
+DB_USER = <db-username>
+DB_PASS = <db-password>
+DB_HOST = <db-hostname>
+BLOB_ACCOUNT_NAME = <storage-account-name>
+BLOB_ACCOUNT_KEY = <blob-account-key>
+BLOB_ACCOUNT_STRING = <blob-storage-connection-string>
+CV_KEY = <computer-vision-key>
+CV_ENDPOINT = <computer-vision-enpoint>
+```
 
 ## References
 This repository borrows partially from [instagram-clone-frontend](https://github.com/yassinjouao/instagram-clone-frontend) and [instagram-clone-backend](https://github.com/yassinjouao/instagram-clone-backend) repositories.
