@@ -21,11 +21,36 @@ First of all **login to azure-cli**.
 az login
 ```
 
+Then you have to create a **resource group** that will contain all the resouurces
+ ```bash 
+az group create --name <resource-group-name> --location <location>
+```
+
+After the resource group we will need the **MySQL database**
+ ```bash 
+az mysql flexible-server create --location <location> --resource-group <resource-group-name> --name <db-name> --admin-user <db-username> --admin-password <db-password --auto-scale-iops Enabled
+```
+
+We will need a **Storage Account** too, that will contain out *Images* container
+ ```bash 
+az storage account create --name <storage-name> --resource-group <resource-group-name> --location <location> --sku Standard_ZRS --encryption-services blob
+az storage container create  --account-name <storage-name>  --name images
+```
+
+The last step before the deployment is the creation of a **Computer Vision** *Cognitive Service Acount*
+ ```bash
+az cognitiveservices account create --kind ComputerVision --location <location> --name <computer-vision-name> --resource-group <resource-group-name>  --sku F0
+```
+Now we have everything ready for the deployment, so let's create the **App service**
+ ```bash
+az appservice plan create --name <app-service-plan-name> --resource-group  <resource-group-name> --is-linux —-location <location> --sku B1
+az webapp create --name <app-name> --plan <app-service-plan-name> --resource-group <resource-group-name> --runtime "NODE:20-lts"
+```
+
+And at last deploy the webapp with **GitHub Actions**
+ ```bash
+az webapp deployment github-actions add --repo LukaszG92/CloudCollective --branch main --resource-group <resource-group-name> --name <app-name> --runtime "NODE:20-lts" --login-with-github
+```
+
 ## References
 This repository borrows partially from [instagram-clone-frontend](https://github.com/yassinjouao/instagram-clone-frontend) and [instagram-clone-backend](https://github.com/yassinjouao/instagram-clone-backend) repositories.
-
-## License
-
-This project is distributed under the [GNU General Public License v3](LICENSE).
-
-![GPLv3Logo](https://www.gnu.org/graphics/gplv3-127x51.png)
